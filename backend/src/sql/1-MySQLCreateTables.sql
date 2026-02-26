@@ -1,4 +1,8 @@
 DROP TABLE User;
+DROP TABLE Purchase;
+DROP TABLE Session;
+DROP TABLE Room;
+DROP TABLE Movie;
 
 CREATE TABLE User (
     id BIGINT NOT NULL AUTO_INCREMENT,
@@ -13,3 +17,42 @@ CREATE TABLE User (
 ) ENGINE = InnoDB;
 
 CREATE INDEX UserIndexByUserName ON User (userName);
+
+CREATE TABLE Movie (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    summary VARCHAR(1000) NOT NULL,
+    duration INT NOT NULL,
+    CONSTRAINT MoviePK PRIMARY KEY (id)
+) ENGINE = InnoDB;
+
+CREATE TABLE Room (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    capacity INT NOT NULL,
+    CONSTRAINT RoomPK PRIMARY KEY (id)
+) ENGINE = InnoDB;
+
+CREATE TABLE Session (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    movieId BIGINT NOT NULL,
+    roomId BIGINT NOT NULL,
+    date DATETIME NOT NULL,
+    price DECIMAL (11, 2) NOT NULL,
+    CONSTRAINT SessionPK PRIMARY KEY (id),
+    CONSTRAINT SessionMovieFK FOREIGN KEY (movieId) REFERENCES Movie(id),
+    CONSTRAINT SessionRoomFK FOREIGN KEY (roomId) REFERENCES Room(id)
+) ENGINE = InnoDB;
+
+CREATE TABLE Purchase (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    userId BIGINT NOT NULL,
+    sessionId BIGINT NOT NULL,
+    tickets INT NOT NULL,
+    creditCard VARCHAR(20) NOT NULL,
+    date DATETIME NOT NULL,
+    delivered BOOLEAN NOT NULL,
+    CONSTRAINT PurchasePK PRIMARY KEY (id),
+    CONSTRAINT PurchaseUserFK FOREIGN KEY (userId) REFERENCES User(id),
+    CONSTRAINT PurchaseSessionFK FOREIGN KEY (sessionId) REFERENCES Session(id)
+) ENGINE = InnoDB;

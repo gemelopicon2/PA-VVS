@@ -15,7 +15,7 @@ public interface PurchaseDao extends JpaRepository<Purchase, Long> {
 
     List<Purchase> findBySessionId(Long sessionId);
 
-    List<Purchase> findByCreditCard(String creditCard)
+    List<Purchase> findByCreditCard(String creditCard);
 
     List<Purchase> findByDateAfter(LocalDateTime date);
 
