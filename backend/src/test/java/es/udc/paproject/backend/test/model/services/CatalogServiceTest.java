@@ -72,4 +72,46 @@ public class CatalogServiceTest {
         assertEquals(movie, foundSession.getMovie());
         assertEquals(room, foundSession.getRoom());
     }
+
+    //Solo devuelve sesiones futuras
+    @Test
+    public void testFindNowPlayingMovies() {
+        Movie movieFuture = createMovie("Futura");
+        Movie moviePast = createMovie("Pasada");
+        Movie movieNoSessions = createMovie("Sin sesiones");
+        movieDao.saveAll(List.of(movieFuture, moviePast, movieNoSessions));
+
+        Room room = createRoom("Sala principal");
+        roomDao.save(room);
+
+        LocalDateTime now = LocalDateTime.now();
+        Session futureSession = new Session(movieFuture, room, now.plusHours(2), BigDecimal.valueOf(10));
+        Session pastSession = new Session(moviePast, room, now.minusHours(2), BigDecimal.valueOf(10));
+        sessionDao.saveAll(List.of(futureSession, pastSession));
+
+        Block<Movie> block = catalogService.findNowPlayingMovies(0, 10);
+
+        assertNotNull(block.getItems());
+        assertEquals(1, block.getItems().size());
+        assertEquals(movieFuture.getId(), block.getItems().get(0).getId());
+        assertFalse(block.getExistMoreItems());
+    }
+
+    //Solo muestra 1 película
+    @Test
+    public void testFindNowPlayingMovies_DistinctSession() {
+        Movie movie = createMovie("Película");
+        movieDao.save(movie);
+        Room room = createRoom("Sala");
+        roomDao.save(room);
+        LocalDateTime now = LocalDateTime.now();
+
+        Session session1 = new Session(movie, room, now.plusHours(1), BigDecimal.valueOf(10));
+        Session session2 = new Session(movie, room, now.plusHours(2), BigDecimal.valueOf(10));
+        sessionDao.saveAll(List.of(session1, session2));
+
+        Block<Movie> block = catalogService.findNowPlayingMovies(0, 10);
+        assertEquals(1, block.getItems().size());
+    }
+
 }
