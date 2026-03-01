@@ -45,5 +45,12 @@ public class CatalogServiceImpl implements CatalogService {
         Page<Movie> moviePage = movieDao.findDistinctBySessionsDateAfter(today.atStartOfDay(), pageable);
         return new Block<>(moviePage.getContent(), moviePage.hasNext());
     }
-
+    @Override
+    public Block<Movie> findMoviesByTitle(String title, int page, int size){
+        return null;
+    }
+    @Override
+    public Movie findMovie(Long movieId) throws InstanceNotFoundException{
+        return null;
+    }
 }

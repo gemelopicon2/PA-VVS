@@ -2,6 +2,7 @@ package es.udc.paproject.backend.model.services;
 
 import java.util.Optional;
 
+import es.udc.paproject.backend.model.exceptions.PermissionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,4 +31,18 @@ public class PermissionCheckerImpl implements PermissionChecker {
 		
 	}
 
+    @Override
+    public User checkIsUserViewer(Long userId) throws InstanceNotFoundException, PermissionException {
+        return null;
+    }
+
+    @Override
+    public User checkIsUserSeller(Long userId) throws InstanceNotFoundException, PermissionException {
+        return null;
+    }
+
+    @Override
+    public User checkPurchaseOwnership(Long userId, Long purchaseId) throws InstanceNotFoundException, PermissionException {
+        return null;
+    }
 }
