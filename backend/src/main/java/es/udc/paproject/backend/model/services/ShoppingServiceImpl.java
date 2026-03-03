@@ -56,6 +56,24 @@ public class ShoppingServiceImpl implements  ShoppingService {
     public void deliverTickets(Long purchaseId, String creditCardNumber)
             throws InstanceNotFoundException, IncorrectCreditCardException,
             SessionAlreadyStartedException, TicketsAlreadyDeliveredException {
-        return;
+
+        Purchase purchase = purchaseDao.findById(purchaseId)
+                .orElseThrow(() -> new InstanceNotFoundException("Purchase", purchaseId));
+
+        if (!purchase.getCreditCard().equals(creditCardNumber)) {
+            throw new IncorrectCreditCardException("purchaseId");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        Session session = purchase.getSession();
+        if (session.getDate().isBefore(now) || session.getDate().isEqual(now)) {
+            throw new SessionAlreadyStartedException();
+        }
+
+        if (purchase.isDelivered()) {
+            throw new TicketsAlreadyDeliveredException("");
+        }
+
+        purchase.setDelivered(true);
     }
 }

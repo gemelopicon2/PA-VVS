@@ -1,9 +1,7 @@
 package es.udc.paproject.backend.test.model.services;
 
 import es.udc.paproject.backend.model.entities.*;
-import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
-import es.udc.paproject.backend.model.exceptions.MaxTicketsExceededException;
-import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
+import es.udc.paproject.backend.model.exceptions.*;
 import es.udc.paproject.backend.model.services.ShoppingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +66,13 @@ public class ShoppingServiceTest {
         Session session = new Session(movie, room, startDateTime, new BigDecimal(price));
         entityManager.persist(session);
         return session;
+    }
+
+    private Purchase createPurchase(User user, Session session, int tickets, String creditCard) {
+        Purchase purchase = new Purchase(user, session, tickets, creditCard, LocalDateTime.now());
+        entityManager.persist(purchase);
+        entityManager.flush();
+        return purchase;
     }
 
     // -------------------------------------------------------------------------
@@ -204,7 +209,6 @@ public class ShoppingServiceTest {
 
     @Test
     public void testGetPurchaseHistory() throws Exception {
-        // 1. Setup
         User user = createUser("spectator1");
         userDao.save(user);
 
@@ -233,5 +237,106 @@ public class ShoppingServiceTest {
     @Test
     public void testGetPurchaseHistoryUserNotFound() {
         assertThrows(InstanceNotFoundException.class, () -> shoppingService.getPurchaseHistory(-1L));
+    }
+
+    // =========================================================================
+    // TESTS FUNC-6: Deliver Tickets
+    // =========================================================================
+
+    @Test
+    public void testDeliverTicketsSuccess() throws Exception {
+        User viewer = createUser("viewer1");
+        Room room = createRoom("Room 1", 100);
+        Movie movie = createMovie("Test Movie");
+        LocalDateTime futureDateTime = LocalDateTime.now().plusDays(1);
+        Session session = createSession(movie, room, futureDateTime, "10.00");
+
+        Purchase purchase = createPurchase(viewer, session, 2, "1234567890123456");
+
+        shoppingService.deliverTickets(purchase.getId(), "1234567890123456");
+
+        assertTrue(purchase.isDelivered());
+    }
+
+    @Test
+    public void testDeliverTicketsPurchaseNotFound() {
+        assertThrows(InstanceNotFoundException.class, () -> {
+            shoppingService.deliverTickets(999L, "1234567890123456");
+        });
+    }
+
+    @Test
+    public void testDeliverTicketsIncorrectCreditCard() {
+        User viewer = createUser("viewer2");
+        Room room = createRoom("Room 2", 100);
+        Movie movie = createMovie("Movie 2");
+        LocalDateTime futureDateTime = LocalDateTime.now().plusDays(1);
+        Session session = createSession(movie, room, futureDateTime, "10.00");
+
+        Purchase purchase = createPurchase(viewer, session, 2, "1234567890123456");
+
+        assertThrows(IncorrectCreditCardException.class, () -> {
+            shoppingService.deliverTickets(purchase.getId(), "9999999999999999");
+        });
+
+        entityManager.refresh(purchase);
+        assertFalse(purchase.isDelivered());
+    }
+
+    @Test
+    public void testDeliverTicketsSessionAlreadyStarted() {
+        User viewer = createUser("viewer3");
+        Room room = createRoom("Room 3", 100);
+        Movie movie = createMovie("Movie 3");
+        LocalDateTime pastDateTime = LocalDateTime.now().minusHours(1);
+        Session session = createSession(movie, room, pastDateTime, "10.00");
+
+        Purchase purchase = createPurchase(viewer, session, 2, "1234567890123456");
+
+        assertThrows(SessionAlreadyStartedException.class, () -> {
+            shoppingService.deliverTickets(purchase.getId(), "1234567890123456");
+        });
+
+        entityManager.refresh(purchase);
+        assertFalse(purchase.isDelivered());
+    }
+
+    @Test
+    public void testDeliverTicketsAlreadyDelivered() throws Exception {
+        User viewer = createUser("viewer4");
+        Room room = createRoom("Room 4", 100);
+        Movie movie = createMovie("Movie 4");
+        LocalDateTime futureDateTime = LocalDateTime.now().plusDays(1);
+        Session session = createSession(movie, room, futureDateTime, "10.00");
+
+        Purchase purchase = createPurchase(viewer, session, 2, "1234567890123456");
+
+        shoppingService.deliverTickets(purchase.getId(), "1234567890123456");
+
+        assertThrows(TicketsAlreadyDeliveredException.class, () -> {
+            shoppingService.deliverTickets(purchase.getId(), "1234567890123456");
+        });
+    }
+
+    @Test
+    public void testDeliverTicketsMultiplePurchasesSameSession() throws Exception {
+        User viewer1 = createUser("viewer5");
+        User viewer2 = createUser("viewer6");
+        Room room = createRoom("Room 5", 100);
+        Movie movie = createMovie("Movie 5");
+        LocalDateTime futureDateTime = LocalDateTime.now().plusDays(1);
+        Session session = createSession(movie, room, futureDateTime, "10.00");
+
+        Purchase purchase1 = createPurchase(viewer1, session, 2, "1111111111111111");
+        Purchase purchase2 = createPurchase(viewer2, session, 3, "2222222222222222");
+
+        shoppingService.deliverTickets(purchase1.getId(), "1111111111111111");
+
+        assertTrue(purchase1.isDelivered());
+        assertFalse(purchase2.isDelivered());
+
+        shoppingService.deliverTickets(purchase2.getId(), "2222222222222222");
+
+        assertTrue(purchase2.isDelivered());
     }
 }
