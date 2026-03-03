@@ -39,7 +39,6 @@ public class CatalogServiceTest {
     @Autowired
     private SessionDao sessionDao;
 
-    /* Métodos auxiliares para crear datos de prueba */
     private Movie createMovie(String title) {
         return new Movie(title, "Summary for " + title, 120);
     }
@@ -56,7 +55,6 @@ public class CatalogServiceTest {
     @Test
     public void testFindSessionById() throws InstanceNotFoundException {
 
-        // 1. Preparación de datos
         Movie movie = createMovie("Avatar");
         Room room = createRoom("Sala 1");
 
@@ -66,16 +64,13 @@ public class CatalogServiceTest {
         Session session = new Session(movie, room, LocalDateTime.now().plusHours(2), new BigDecimal(10));
         sessionDao.save(session);
 
-        // 2. Ejecución
         Session foundSession = catalogService.findSession(session.getId());
 
-        // 3. Comprobación
         assertEquals(session, foundSession);
         assertEquals(movie, foundSession.getMovie());
         assertEquals(room, foundSession.getRoom());
     }
 
-    //Solo devuelve sesiones futuras
     @Test
     public void testFindNowPlayingMovies() {
         Movie movieFuture = createMovie("Futura");
@@ -99,7 +94,6 @@ public class CatalogServiceTest {
         assertFalse(block.getExistMoreItems());
     }
 
-    //Solo muestra 1 película
     @Test
     public void testFindNowPlayingMovies_DistinctSession() {
         Movie movie = createMovie("Película");
@@ -114,6 +108,35 @@ public class CatalogServiceTest {
 
         Block<Movie> block = catalogService.findNowPlayingMovies(0, 10);
         assertEquals(1, block.getItems().size());
+    }
+
+    @Test
+    public void testFindMoviesByTitle() {
+        Movie movie1 = createMovie("El Señor de los Anillos");
+        Movie movie2 = createMovie("El Señor de los Anillos 2");
+        Movie movie3 = createMovie("Star Wars");
+        movieDao.saveAll(List.of(movie1, movie2, movie3));
+
+        Block<Movie> block = catalogService.findMoviesByTitle("señor", 0, 10);
+
+        assertEquals(2, block.getItems().size());
+        assertFalse(block.getExistMoreItems());
+    }
+
+    @Test
+    public void testFindMovie() throws InstanceNotFoundException {
+        Movie movie = createMovie("Avatar");
+        movieDao.save(movie);
+
+        Movie foundMovie = catalogService.findMovie(movie.getId());
+
+        assertEquals(movie.getId(), foundMovie.getId());
+        assertEquals("Avatar", foundMovie.getTitle());
+    }
+
+    @Test
+    public void testFindMovieNotFound() {
+        assertThrows(InstanceNotFoundException.class, () -> catalogService.findMovie(-1L));
     }
 
 }

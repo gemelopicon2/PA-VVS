@@ -1,5 +1,6 @@
 package es.udc.paproject.backend.model.services;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,17 +48,22 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Override
     public Block<Movie> findNowPlayingMovies(int page, int size) {
-        LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
         Pageable pageable = PageRequest.of(page, size);
-        Page<Movie> moviePage = movieDao.findDistinctBySessionsDateAfter(today.atStartOfDay(), pageable);
+        Page<Movie> moviePage = movieDao.findDistinctBySessionsDateAfter(now, pageable);
         return new Block<>(moviePage.getContent(), moviePage.hasNext());
     }
+
     @Override
     public Block<Movie> findMoviesByTitle(String title, int page, int size){
-        return null;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Movie> moviePage = movieDao.findByTitleContainingIgnoreCase(title, pageable);
+
+        return new Block<>(moviePage.getContent(), moviePage.hasNext());
     }
+
     @Override
-    public Movie findMovie(Long movieId) throws InstanceNotFoundException{
-        return null;
+    public Movie findMovie(Long movieId) throws InstanceNotFoundException {
+        return movieDao.findById(movieId).orElseThrow(() -> new InstanceNotFoundException("project.entities.movie", movieId));
     }
 }

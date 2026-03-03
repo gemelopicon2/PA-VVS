@@ -18,6 +18,8 @@ public interface MovieDao extends JpaRepository<Movie, Long> {
 
     List<Movie> findByDurationBetween(int minDuration, int maxDuration);
 
+    Page<Movie> findByTitleContainingIgnoreCase(String title, Pageable pageable);
+
     @Query("SELECT DISTINCT m FROM Movie m JOIN m.sessions s WHERE s.date > :date")
     Page<Movie> findDistinctBySessionsDateAfter(LocalDateTime date, Pageable pageable);
 }

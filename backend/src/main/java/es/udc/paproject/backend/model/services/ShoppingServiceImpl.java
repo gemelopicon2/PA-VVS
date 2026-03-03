@@ -49,7 +49,8 @@ public class ShoppingServiceImpl implements  ShoppingService {
         return purchaseDao.save(purchase);    }
     @Override
     public List<Purchase> getPurchaseHistory(Long userId) throws InstanceNotFoundException {
-        return null;
+        User user = userDao.findById(userId).orElseThrow(() -> new InstanceNotFoundException("User", userId));
+        return purchaseDao.findByUserOrderByDateDesc(user);
     }
     @Override
     public void deliverTickets(Long purchaseId, String creditCardNumber)

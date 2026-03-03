@@ -1,10 +1,6 @@
 package es.udc.paproject.backend.test.model.services;
 
-import es.udc.paproject.backend.model.entities.Room;
-import es.udc.paproject.backend.model.entities.Movie;
-import es.udc.paproject.backend.model.entities.Purchase;
-import es.udc.paproject.backend.model.entities.Session;
-import es.udc.paproject.backend.model.entities.User;
+import es.udc.paproject.backend.model.entities.*;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.MaxTicketsExceededException;
 import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
@@ -18,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,6 +28,21 @@ public class ShoppingServiceTest {
 
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private MovieDao movieDao;
+
+    @Autowired
+    private RoomDao roomDao;
+
+    @Autowired
+    private SessionDao sessionDao;
+
+    @Autowired
+    private PurchaseDao purchaseDao;
 
     private User createUser(String userName) {
         User user = new User(userName, "password", "Pepe", "Lopez",
@@ -183,5 +195,43 @@ public class ShoppingServiceTest {
 
         assertNotNull(purchase);
         assertEquals(0, purchase.getTickets());
+    }
+
+    // -------------------------------------------------------------------------
+    // Tests visualizar el histórico de compras (FUNC-5)
+    // -------------------------------------------------------------------------
+
+
+    @Test
+    public void testGetPurchaseHistory() throws Exception {
+        // 1. Setup
+        User user = createUser("spectator1");
+        userDao.save(user);
+
+        Movie movie = new Movie("Avatar", "Resumen", 120);
+        movieDao.save(movie);
+
+        Room room = new Room("Sala 1", 100);
+        roomDao.save(room);
+
+        Session session = new Session(movie, room, LocalDateTime.now().plusDays(1), new BigDecimal("10.00"));
+        sessionDao.save(session);
+
+        Purchase oldPurchase = new Purchase(user, session, 2, "1234567890123456", LocalDateTime.now().minusDays(2));
+        purchaseDao.save(oldPurchase);
+
+        Purchase recentPurchase = new Purchase(user, session, 3, "1234567890123456", LocalDateTime.now().minusDays(1));
+        purchaseDao.save(recentPurchase);
+
+        List<Purchase> history = shoppingService.getPurchaseHistory(user.getId());
+
+        assertEquals(2, history.size());
+        assertEquals(recentPurchase.getId(), history.get(0).getId());
+        assertEquals(oldPurchase.getId(), history.get(1).getId());
+    }
+
+    @Test
+    public void testGetPurchaseHistoryUserNotFound() {
+        assertThrows(InstanceNotFoundException.class, () -> shoppingService.getPurchaseHistory(-1L));
     }
 }
