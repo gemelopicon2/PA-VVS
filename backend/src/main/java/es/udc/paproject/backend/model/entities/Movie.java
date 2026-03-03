@@ -2,6 +2,9 @@ package es.udc.paproject.backend.model.entities;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 public class Movie {
 
@@ -12,6 +15,9 @@ public class Movie {
     private String title;
     private String summary;
     private int duration;
+    @OneToMany(mappedBy = "movie")
+    private Set<Session> sessions = new HashSet<>();
+
 
     public Movie(){}
 

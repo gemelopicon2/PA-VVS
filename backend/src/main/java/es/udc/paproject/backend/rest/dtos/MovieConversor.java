@@ -10,7 +10,7 @@ public class MovieConversor {
                 movie.getId(),
                 movie.getTitle(),
                 movie.getDuration(),
-                movie.getGenre()
+                movie.getSummary()
         );
     }
 

@@ -8,11 +8,10 @@ public class MovieCatalogDto {
 
     public MovieCatalogDto() {}
 
-    public MovieCatalogDto(Long id, String title, int duration, String genre, String posterUrl) {
+    public MovieCatalogDto(Long id, String title, int duration, String posterUrl) {
         this.id = id;
         this.title = title;
         this.duration = duration;
-        this.genre = genre;
     }
 
     public Long getId() {

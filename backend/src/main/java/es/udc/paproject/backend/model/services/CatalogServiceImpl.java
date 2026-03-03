@@ -23,6 +23,9 @@ public class CatalogServiceImpl implements CatalogService {
     @Autowired
     private SessionDao sessionDao;
 
+    @Autowired
+    private MovieDao movieDao;
+
     @Override
     public Session findSession(Long sessionId) throws InstanceNotFoundException {
 
@@ -35,8 +38,12 @@ public class CatalogServiceImpl implements CatalogService {
         return session.get();
     }
 
-    @Autowired
-    private MovieDao movieDao;
+    @Override
+    public Session findSessionWithAvailableSeats(Long sessionId) throws InstanceNotFoundException{
+        return null;
+    }
+
+
 
     @Override
     public Block<Movie> findNowPlayingMovies(int page, int size) {
