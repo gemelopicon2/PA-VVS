@@ -206,7 +206,6 @@ public class ShoppingServiceTest {
     // Tests visualizar el histórico de compras (FUNC-5)
     // -------------------------------------------------------------------------
 
-
     @Test
     public void testGetPurchaseHistory() throws Exception {
         User user = createUser("spectator1");

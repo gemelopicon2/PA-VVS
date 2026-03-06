@@ -47,29 +47,9 @@ public class CatalogServiceTest {
         return new Room(name, 100);
     }
 
-    @Test
-    public void testFindSessionByNonExistentId() {
-        assertThrows(InstanceNotFoundException.class, () -> catalogService.findSession(-1L));
-    }
-
-    @Test
-    public void testFindSessionById() throws InstanceNotFoundException {
-
-        Movie movie = createMovie("Avatar");
-        Room room = createRoom("Sala 1");
-
-        movieDao.save(movie);
-        roomDao.save(room);
-
-        Session session = new Session(movie, room, LocalDateTime.now().plusHours(2), new BigDecimal(10));
-        sessionDao.save(session);
-
-        Session foundSession = catalogService.findSession(session.getId());
-
-        assertEquals(session, foundSession);
-        assertEquals(movie, foundSession.getMovie());
-        assertEquals(room, foundSession.getRoom());
-    }
+    // -------------------------------------------------------------------------
+    // Tests visualizar la cartelera (FUNC-1)
+    // -------------------------------------------------------------------------
 
     @Test
     public void testFindNowPlayingMovies() {
@@ -123,21 +103,9 @@ public class CatalogServiceTest {
         assertFalse(block.getExistMoreItems());
     }
 
-    @Test
-    public void testFindMovie() throws InstanceNotFoundException {
-        Movie movie = createMovie("Avatar");
-        movieDao.save(movie);
-
-        Movie foundMovie = catalogService.findMovie(movie.getId());
-
-        assertEquals(movie.getId(), foundMovie.getId());
-        assertEquals("Avatar", foundMovie.getTitle());
-    }
-
-    @Test
-    public void testFindMovieNotFound() {
-        assertThrows(InstanceNotFoundException.class, () -> catalogService.findMovie(-1L));
-    }
+    // -------------------------------------------------------------------------
+    // Tests visualizar la información detallada de una película (FUNC-2)
+    // -------------------------------------------------------------------------
 
     @Test
     public void testFindMovie() throws InstanceNotFoundException {
@@ -149,6 +117,39 @@ public class CatalogServiceTest {
         assertEquals(movie.getTitle(), found.getTitle());
         assertEquals(movie.getSummary(), found.getSummary());
         assertEquals(movie.getDuration(), found.getDuration());
+    }
+
+    @Test
+    public void testFindMovieNotFound() {
+        assertThrows(InstanceNotFoundException.class, () -> catalogService.findMovie(-1L));
+    }
+
+    // -------------------------------------------------------------------------
+    // Tests visualizar la información detallada de una sesión (FUNC-3)
+    // -------------------------------------------------------------------------
+
+    @Test
+    public void testFindSessionByNonExistentId() {
+        assertThrows(InstanceNotFoundException.class, () -> catalogService.findSession(-1L));
+    }
+
+    @Test
+    public void testFindSessionById() throws InstanceNotFoundException {
+
+        Movie movie = createMovie("Avatar");
+        Room room = createRoom("Sala 1");
+
+        movieDao.save(movie);
+        roomDao.save(room);
+
+        Session session = new Session(movie, room, LocalDateTime.now().plusHours(2), new BigDecimal(10));
+        sessionDao.save(session);
+
+        Session foundSession = catalogService.findSession(session.getId());
+
+        assertEquals(session, foundSession);
+        assertEquals(movie, foundSession.getMovie());
+        assertEquals(room, foundSession.getRoom());
     }
 
 }
