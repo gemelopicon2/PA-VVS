@@ -139,4 +139,16 @@ public class CatalogServiceTest {
         assertThrows(InstanceNotFoundException.class, () -> catalogService.findMovie(-1L));
     }
 
+    @Test
+    public void testFindMovie() throws InstanceNotFoundException {
+        Movie movie = new Movie("Título", "Sinopsis", 120);
+        movieDao.save(movie);
+        Movie found = catalogService.findMovie(movie.getId());
+
+        assertEquals(movie.getId(), found.getId());
+        assertEquals(movie.getTitle(), found.getTitle());
+        assertEquals(movie.getSummary(), found.getSummary());
+        assertEquals(movie.getDuration(), found.getDuration());
+    }
+
 }
