@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 
 @Service
 @Transactional
@@ -47,11 +51,15 @@ public class ShoppingServiceImpl implements  ShoppingService {
 
         Purchase purchase = new Purchase(user, session, numberOfTickets, creditCardNumber, now);
         return purchaseDao.save(purchase);    }
+
     @Override
-    public List<Purchase> getPurchaseHistory(Long userId) throws InstanceNotFoundException {
+    public Block<Purchase> getPurchaseHistory(Long userId, int page, int size) throws InstanceNotFoundException {
         User user = userDao.findById(userId).orElseThrow(() -> new InstanceNotFoundException("User", userId));
-        return purchaseDao.findByUserOrderByDateDesc(user);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
+        Slice<Purchase> slice = purchaseDao.findByUserOrderByDateDesc(user, pageable);
+        return new Block<>(slice.getContent(), slice.hasNext());
     }
+
     @Override
     public void deliverTickets(Long purchaseId, String creditCardNumber)
             throws InstanceNotFoundException, IncorrectCreditCardException,

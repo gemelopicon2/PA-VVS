@@ -34,7 +34,8 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/users/signUp").permitAll()
 				.requestMatchers(HttpMethod.POST, "/users/login").permitAll()
 				.requestMatchers(HttpMethod.POST, "/users/loginFromServiceToken").permitAll()
-				.requestMatchers(HttpMethod.PUT, "/users/*").hasRole("USER")
+                    .requestMatchers(HttpMethod.GET, "/catalog/sessions/**").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/users/*").hasRole("USER")
 				.requestMatchers(HttpMethod.POST, "/users/*/changePassword").hasRole("USER")
 				.anyRequest().denyAll());
 

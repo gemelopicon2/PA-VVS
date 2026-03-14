@@ -11,7 +11,8 @@ import java.util.List;
 public interface ShoppingService {
     Purchase buyTickets(Long userId, Long sessionId, int numberOfTickets, String creditCardNumber)
             throws InstanceNotFoundException, SessionAlreadyStartedException, MaxTicketsExceededException;
-    List<Purchase> getPurchaseHistory(Long userId) throws InstanceNotFoundException;
+    Block<Purchase> getPurchaseHistory(Long userId, int page, int size) throws InstanceNotFoundException;
+
     void deliverTickets(Long purchaseId, String creditCardNumber)
             throws InstanceNotFoundException, IncorrectCreditCardException,
             SessionAlreadyStartedException, TicketsAlreadyDeliveredException;

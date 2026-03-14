@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import es.udc.paproject.backend.rest.dtos.BlockDto;
+import es.udc.paproject.backend.model.services.Block;
 
 import java.util.List;
 
@@ -38,9 +40,11 @@ public class ShoppingController {
 
     // FUNC-5: Histórico de compras
     @GetMapping("/purchases")
-    public List<PurchaseDto> getPurchaseHistory(@RequestAttribute Long userId) throws InstanceNotFoundException {
-        List<Purchase> purchases = shoppingService.getPurchaseHistory(userId);
-        return ShoppingConversor.toPurchaseDtos(purchases);
+    public BlockDto<PurchaseDto> getPurchaseHistory(
+            @RequestAttribute Long userId,
+            @RequestParam(defaultValue = "0") int page) throws InstanceNotFoundException {
+        Block<Purchase> purchaseBlock = shoppingService.getPurchaseHistory(userId, page, 2);
+        return new BlockDto<>(ShoppingConversor.toPurchaseDtos(purchaseBlock.getItems()), purchaseBlock.getExistMoreItems());
     }
 
     // FUNC-6: Entregar entradas

@@ -4,6 +4,8 @@ import java.util.List;
 import java.time.LocalDateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 @Repository
 public interface PurchaseDao extends JpaRepository<Purchase, Long> {
@@ -33,6 +35,6 @@ public interface PurchaseDao extends JpaRepository<Purchase, Long> {
 
     List<Purchase> findBySessionAndTicketsGreaterThan(Session session, int minTickets);
 
-    List<Purchase> findByUserOrderByDateDesc(User user);
+    Slice<Purchase> findByUserOrderByDateDesc(User user, Pageable pageable);
 
 }

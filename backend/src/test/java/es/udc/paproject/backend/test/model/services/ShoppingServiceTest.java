@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.udc.paproject.backend.model.services.Block;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -208,34 +209,53 @@ public class ShoppingServiceTest {
 
     @Test
     public void testGetPurchaseHistory() throws Exception {
-        User user = createUser("spectator1");
-        userDao.save(user);
-
+        User user = createUser("user");
         Movie movie = new Movie("Avatar", "Resumen", 120);
         movieDao.save(movie);
-
         Room room = new Room("Sala 1", 100);
         roomDao.save(room);
+        Session session = new Session(movie, room, LocalDateTime.now().plusDays(1), new BigDecimal("10.00"));
+        sessionDao.save(session);
+        Purchase oldPurchase = new Purchase(user, session, 2, "1234567890123456", LocalDateTime.now().minusDays(2));
+        purchaseDao.save(oldPurchase);
+        Purchase recentPurchase = new Purchase(user, session, 3, "1234567890123456", LocalDateTime.now().minusDays(1));
+        purchaseDao.save(recentPurchase);
+        Block<Purchase> block = shoppingService.getPurchaseHistory(user.getId(), 0, 2);
+        assertEquals(2, block.getItems().size());
+        assertEquals(recentPurchase.getId(), block.getItems().get(0).getId());
+        assertEquals(oldPurchase.getId(), block.getItems().get(1).getId());
+        assertFalse(block.getExistMoreItems());
+    }
 
+    @Test
+    public void testGetPurchaseHistoryMoreThanTwo() throws Exception {
+        User user = createUser("user");
+        Movie movie = new Movie("Avatar", "Resumen", 130);
+        movieDao.save(movie);
+        Room room = new Room("Sala 1", 100);
+        roomDao.save(room);
         Session session = new Session(movie, room, LocalDateTime.now().plusDays(1), new BigDecimal("10.00"));
         sessionDao.save(session);
 
-        Purchase oldPurchase = new Purchase(user, session, 2, "1234567890123456", LocalDateTime.now().minusDays(2));
-        purchaseDao.save(oldPurchase);
+        Purchase p1 = new Purchase(user, session, 1, "1111", LocalDateTime.now().minusDays(3));
+        Purchase p2 = new Purchase(user, session, 2, "2222", LocalDateTime.now().minusDays(2));
+        Purchase p3 = new Purchase(user, session, 3, "3333", LocalDateTime.now().minusDays(1));
+        purchaseDao.saveAll(List.of(p1, p2, p3));
 
-        Purchase recentPurchase = new Purchase(user, session, 3, "1234567890123456", LocalDateTime.now().minusDays(1));
-        purchaseDao.save(recentPurchase);
-
-        List<Purchase> history = shoppingService.getPurchaseHistory(user.getId());
-
-        assertEquals(2, history.size());
-        assertEquals(recentPurchase.getId(), history.get(0).getId());
-        assertEquals(oldPurchase.getId(), history.get(1).getId());
+        Block<Purchase> block1 = shoppingService.getPurchaseHistory(user.getId(), 0, 2);
+        assertEquals(2, block1.getItems().size());
+        assertEquals(p3.getId(), block1.getItems().get(0).getId());
+        assertEquals(p2.getId(), block1.getItems().get(1).getId());
+        assertTrue(block1.getExistMoreItems());
+        Block<Purchase> block2 = shoppingService.getPurchaseHistory(user.getId(), 1, 2);
+        assertEquals(1, block2.getItems().size());
+        assertEquals(p1.getId(), block2.getItems().get(0).getId());
+        assertFalse(block2.getExistMoreItems());
     }
 
     @Test
     public void testGetPurchaseHistoryUserNotFound() {
-        assertThrows(InstanceNotFoundException.class, () -> shoppingService.getPurchaseHistory(-1L));
+        assertThrows(InstanceNotFoundException.class, () -> shoppingService.getPurchaseHistory(-1L, 0, 2));
     }
 
     // =========================================================================
