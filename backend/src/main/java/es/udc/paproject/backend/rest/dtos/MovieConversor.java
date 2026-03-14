@@ -18,7 +18,7 @@ public class MovieConversor {
         return movies.stream().map(MovieConversor::toMovieCatalogDto).collect(Collectors.toList());
     }
 
-    public static MovieDetailsDto toDetailsDto(Movie movie) {
+    public static MovieDetailsDto toMovieDetailsDto(Movie movie) {
         return new MovieDetailsDto(
                 movie.getId(),
                 movie.getTitle(),

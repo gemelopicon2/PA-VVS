@@ -54,4 +54,5 @@ public class Purchase {
 
     public boolean isDelivered(){ return delivered;}
     public void setDelivered(boolean delivered){ this.delivered = delivered;}
+
 }
