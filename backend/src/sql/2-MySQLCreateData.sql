@@ -20,8 +20,8 @@ ALTER TABLE User AUTO_INCREMENT = 1;
 -- 1. Insertar 2 usuarios: "viewer" (rol 0) y "ticketseller" (rol 1)
 -- Ambos con la contraseña "pa2526" cifrada.
 INSERT INTO User (userName, password, firstName, lastName, email, role) VALUES
-('viewer', '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPLCAz2gA7E0IZhbkvsPFew/5u', 'Espectador', 'Pruebas', 'viewer@udc.es', 0),
-('ticketseller', '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPLCAz2gA7E0IZhbkvsPFew/5u', 'Taquillero', 'Pruebas', 'seller@udc.es', 1);
+('viewer', '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPlCAz2gA7EOIZhbkvsPFew/5u', 'Espectador', 'Pruebas', 'viewer@udc.es', 0),
+('ticketseller', '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPlCAz2gA7EOIZhbkvsPFew/5u', 'Taquillero', 'Pruebas', 'seller@udc.es', 1);
 
 -- 2. Insertar 2 salas
 INSERT INTO Room (name, capacity) VALUES

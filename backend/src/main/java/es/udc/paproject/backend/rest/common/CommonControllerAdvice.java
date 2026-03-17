@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import es.udc.paproject.backend.model.exceptions.DuplicateInstanceException;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.PermissionException;
+import es.udc.paproject.backend.model.exceptions.MaxTicketsExceededException;
+import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
+import es.udc.paproject.backend.model.exceptions.TicketsAlreadyDeliveredException;
+import es.udc.paproject.backend.model.exceptions.IncorrectCreditCardException;
 
 @ControllerAdvice
 public class CommonControllerAdvice {
@@ -75,6 +79,42 @@ public class CommonControllerAdvice {
 
 		return new ErrorsDto(errorMessage);
 		
+	}
+
+	@ExceptionHandler(MaxTicketsExceededException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ErrorsDto handleMaxTicketsExceededException(MaxTicketsExceededException exception) {
+
+		return new ErrorsDto(exception.getMessage());
+
+	}
+
+	@ExceptionHandler(SessionAlreadyStartedException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ErrorsDto handleSessionAlreadyStartedException(SessionAlreadyStartedException exception) {
+
+		return new ErrorsDto(exception.getMessage());
+
+	}
+
+	@ExceptionHandler(TicketsAlreadyDeliveredException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ErrorsDto handleTicketsAlreadyDeliveredException(TicketsAlreadyDeliveredException exception) {
+
+		return new ErrorsDto(exception.getMessage());
+
+	}
+
+	@ExceptionHandler(IncorrectCreditCardException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ErrorsDto handleIncorrectCreditCardException(IncorrectCreditCardException exception) {
+
+		return new ErrorsDto(exception.getMessage());
+
 	}
 
 }

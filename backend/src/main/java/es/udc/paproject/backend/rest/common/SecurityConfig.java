@@ -30,14 +30,19 @@ public class SecurityConfig {
 			.csrf((csrf) -> csrf.disable())
 			.sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.addFilterBefore(new JwtFilter(jwtGenerator), UsernamePasswordAuthenticationFilter.class)
-			.authorizeHttpRequests((authorize) -> authorize
-				.requestMatchers(HttpMethod.POST, "/users/signUp").permitAll()
-				.requestMatchers(HttpMethod.POST, "/users/login").permitAll()
-				.requestMatchers(HttpMethod.POST, "/users/loginFromServiceToken").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/catalog/sessions/**").permitAll()
-                    .requestMatchers(HttpMethod.PUT, "/users/*").hasRole("USER")
-				.requestMatchers(HttpMethod.POST, "/users/*/changePassword").hasRole("USER")
-				.anyRequest().denyAll());
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(HttpMethod.POST, "/users/signUp").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/loginFromServiceToken").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/users/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/users/*/changePassword").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/catalog/movies").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/catalog/movies/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/catalog/sessions/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/shopping/purchases").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET,  "/shopping/purchases").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/shopping/purchases/*/deliver").hasRole("USER")
+                        .anyRequest().denyAll());
 
 		return http.build();
 
