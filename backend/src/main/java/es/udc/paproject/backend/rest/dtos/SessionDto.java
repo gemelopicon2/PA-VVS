@@ -1,6 +1,7 @@
 package es.udc.paproject.backend.rest.dtos;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class SessionDto {
 
@@ -9,12 +10,12 @@ public class SessionDto {
     private String movieTitle;
     private Long roomId;
     private String roomName;
-    private long date;
+    private LocalDateTime date;
     private BigDecimal price;
 
     public SessionDto() {}
 
-    public SessionDto(Long id, Long movieId, String movieTitle, Long roomId, String roomName, long date, BigDecimal price) {
+    public SessionDto(Long id, Long movieId, String movieTitle, Long roomId, String roomName, LocalDateTime date, BigDecimal price) {
         this.id = id;
         this.movieId = movieId;
         this.movieTitle = movieTitle;
@@ -39,8 +40,8 @@ public class SessionDto {
     public String getRoomName() { return roomName; }
     public void setRoomName(String roomName) { this.roomName = roomName; }
 
-    public long getDate() { return date; }
-    public void setDate(long date) { this.date = date; }
+    public LocalDateTime getDate() { return date; }
+    public void setDate(LocalDateTime date) { this.date = date; }
 
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
