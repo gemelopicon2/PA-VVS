@@ -3,9 +3,12 @@ package es.udc.paproject.backend.test.model.services;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import es.udc.paproject.backend.model.exceptions.InvalidDateException;
+import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
 import es.udc.paproject.backend.model.services.Block;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +55,7 @@ public class CatalogServiceTest {
     // -------------------------------------------------------------------------
 
     @Test
-    public void testFindNowPlayingMovies() {
+    public void testFindNowPlayingMovies() throws InvalidDateException{
         Movie movieFuture = createMovie("Futura");
         Movie moviePast = createMovie("Pasada");
         Movie movieNoSessions = createMovie("Sin sesiones");
@@ -66,7 +69,7 @@ public class CatalogServiceTest {
         Session pastSession = new Session(moviePast, room, now.minusHours(2), BigDecimal.valueOf(10));
         sessionDao.saveAll(List.of(futureSession, pastSession));
 
-        Block<Movie> block = catalogService.findNowPlayingMovies(0, 10);
+        Block<Movie> block = catalogService.findNowPlayingMovies(LocalDate.now(),0, 10);
 
         assertNotNull(block.getItems());
         assertEquals(1, block.getItems().size());
@@ -75,7 +78,7 @@ public class CatalogServiceTest {
     }
 
     @Test
-    public void testFindNowPlayingMovies_DistinctSession() {
+    public void testFindNowPlayingMovies_DistinctSession() throws InvalidDateException {
         Movie movie = createMovie("Película");
         movieDao.save(movie);
         Room room = createRoom("Sala");
@@ -86,7 +89,7 @@ public class CatalogServiceTest {
         Session session2 = new Session(movie, room, now.plusHours(2), BigDecimal.valueOf(10));
         sessionDao.saveAll(List.of(session1, session2));
 
-        Block<Movie> block = catalogService.findNowPlayingMovies(0, 10);
+        Block<Movie> block = catalogService.findNowPlayingMovies(LocalDate.now(),0, 10);
         assertEquals(1, block.getItems().size());
     }
 
@@ -134,7 +137,7 @@ public class CatalogServiceTest {
     }
 
     @Test
-    public void testFindSessionById() throws InstanceNotFoundException {
+    public void testFindSessionById() throws InstanceNotFoundException, SessionAlreadyStartedException {
 
         Movie movie = createMovie("Avatar");
         Room room = createRoom("Sala 1");

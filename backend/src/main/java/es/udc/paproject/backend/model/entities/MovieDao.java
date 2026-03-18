@@ -22,4 +22,7 @@ public interface MovieDao extends JpaRepository<Movie, Long> {
 
     @Query("SELECT DISTINCT m FROM Movie m JOIN m.sessions s WHERE s.date > :date")
     Page<Movie> findDistinctBySessionsDateAfter(LocalDateTime date, Pageable pageable);
+
+    Page<Movie> findDistinctBySessionsDateBetween(LocalDateTime start,LocalDateTime end, Pageable pageable
+    );
 }

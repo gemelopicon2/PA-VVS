@@ -3,6 +3,8 @@ package es.udc.paproject.backend.model.services;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import es.udc.paproject.backend.model.exceptions.InvalidDateException;
+import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +30,15 @@ public class CatalogServiceImpl implements CatalogService {
     private MovieDao movieDao;
 
     @Override
-    public Session findSession(Long sessionId) throws InstanceNotFoundException {
+    public Session findSession(Long sessionId) throws InstanceNotFoundException, SessionAlreadyStartedException {
 
         Optional<Session> session = sessionDao.findById(sessionId);
 
         if (!session.isPresent()) {
             throw new InstanceNotFoundException("project.entities.session", sessionId);
+        }
+        if (session.get().getDate().isBefore(LocalDateTime.now())) {
+            throw new SessionAlreadyStartedException();
         }
 
         return session.get();
@@ -47,10 +52,18 @@ public class CatalogServiceImpl implements CatalogService {
 
 
     @Override
-    public Block<Movie> findNowPlayingMovies(int page, int size) {
-        LocalDateTime now = LocalDateTime.now();
+    public Block<Movie> findNowPlayingMovies(LocalDate date, int page, int size) throws InvalidDateException {
+        LocalDate today = LocalDate.now();
+
+        if (date.isBefore(today) || date.isAfter(today.plusDays(6))) {
+            throw new InvalidDateException();
+        }
+
+        LocalDateTime start = date.isEqual(today) ? LocalDateTime.now() : date.atStartOfDay();
+        LocalDateTime end = date.atTime(23, 59, 59);
+
         Pageable pageable = PageRequest.of(page, size);
-        Page<Movie> moviePage = movieDao.findDistinctBySessionsDateAfter(now, pageable);
+        Page<Movie> moviePage = movieDao.findDistinctBySessionsDateBetween(start, end, pageable);
         return new Block<>(moviePage.getContent(), moviePage.hasNext());
     }
 
