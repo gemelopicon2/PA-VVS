@@ -58,3 +58,4 @@ INSERT INTO Session (movieId, roomId, date, price) VALUES
 -- El usuario "viewer" compró 2 entradas para la sesión ID 1 (que ya empezó).
 INSERT INTO Purchase (userId, sessionId, tickets, creditCard, date, delivered) VALUES
 (1, 1, 2, '1234567890123456', ADDDATE(NOW(), INTERVAL -2 DAY), 0);
+(1, 1, 3, '9876543210987654', ADDDATE(NOW(), INTERVAL -1 DAY), 0);

@@ -14,7 +14,7 @@ public class ShoppingConversor {
                 purchase.getId(),
                 purchase.getSession().getId(),
                 purchase.getSession().getMovie().getTitle(),
-                purchase.getDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                purchase.getDate().toLocalDate(),
                 purchase.getTickets(),
                 purchase.isDelivered()
         );

@@ -1,91 +1,89 @@
 package es.udc.paproject.backend.model.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class User {
-	
-	public enum RoleType {USER};
 
-	private Long id;
-	private String userName;
-	private String password;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private RoleType role;
+    public enum RoleType {USER, SELLER};
 
-	public User() {}
+    private Long id;
+    private String userName;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private RoleType role;
 
-	public User(String userName, String password, String firstName, String lastName, String email) {
+    public User() {}
 
-		this.userName = userName;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		
-	}
+    public User(String userName, String password, String firstName, String lastName, String email) {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Long getId() {
-		return id;
-	}
+        this.userName = userName;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long getId() {
+        return id;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public RoleType getRole() {
-		return role;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setRole(RoleType role) {
-		this.role = role;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Enumerated(EnumType.ORDINAL)
+    public RoleType getRole() {
+        return role;
+    }
+
+    public void setRole(RoleType role) {
+        this.role = role;
+    }
 
 }

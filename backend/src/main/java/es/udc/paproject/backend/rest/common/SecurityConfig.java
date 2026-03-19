@@ -19,17 +19,17 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-	
-	@Autowired
-	private JwtGenerator jwtGenerator;
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Autowired
+    private JwtGenerator jwtGenerator;
 
-		http.cors(Customizer.withDefaults())
-			.csrf((csrf) -> csrf.disable())
-			.sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.addFilterBefore(new JwtFilter(jwtGenerator), UsernamePasswordAuthenticationFilter.class)
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http.cors(Customizer.withDefaults())
+                .csrf((csrf) -> csrf.disable())
+                .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtFilter(jwtGenerator), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(HttpMethod.POST, "/users/signUp").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
@@ -41,28 +41,28 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/catalog/sessions/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/shopping/purchases").hasRole("USER")
                         .requestMatchers(HttpMethod.GET,  "/shopping/purchases").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/shopping/purchases/*/deliver").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/shopping/purchases/*/deliver").hasRole("SELLER")
                         .anyRequest().denyAll());
 
-		return http.build();
+        return http.build();
 
-	}
-	
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		
-		CorsConfiguration config = new CorsConfiguration();
-	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		
-		config.setAllowCredentials(true);
-	    config.setAllowedOriginPatterns(Arrays.asList("*"));
-	    config.addAllowedHeader("*");
-	    config.addAllowedMethod("*");
-	    
-	    source.registerCorsConfiguration("/**", config);
-	    
-	    return source;
-	    
-	 }
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration config = new CorsConfiguration();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        config.setAllowCredentials(true);
+        config.setAllowedOriginPatterns(Arrays.asList("*"));
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
+
+    }
 
 }

@@ -1,17 +1,19 @@
 package es.udc.paproject.backend.rest.dtos;
 
+import java.time.LocalDate;
+
 public class PurchaseDto {
 
     private Long id;
     private Long sessionId;
     private String movieTitle;
-    private long date;
+    private LocalDate date;
     private int tickets;
     private boolean delivered;
 
     public PurchaseDto() {}
 
-    public PurchaseDto(Long id, Long sessionId, String movieTitle, long date, int tickets, boolean delivered) {
+    public PurchaseDto(Long id, Long sessionId, String movieTitle, LocalDate date, int tickets, boolean delivered) {
         this.id = id;
         this.sessionId = sessionId;
         this.movieTitle = movieTitle;
@@ -29,8 +31,8 @@ public class PurchaseDto {
     public String getMovieTitle() { return movieTitle; }
     public void setMovieTitle(String movieTitle) { this.movieTitle = movieTitle; }
 
-    public long getDate() { return date; }
-    public void setDate(long date) { this.date = date; }
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
 
     public int getTickets() { return tickets; }
     public void setTickets(int tickets) { this.tickets = tickets; }
