@@ -34,12 +34,12 @@ INSERT INTO Movie (title, summary, duration) VALUES
 ('El Padrino', 'La familia criminal Corleone...', 175);
 
 -- 4. Insertar 2 sesiones:
--- ID 1: Una sesión en el PASADO (ya comenzada) para "Torrente, presidente" en "Sala 1".
--- ID 2: Una sesión en el FUTURO (aún no comenzada) para "El Padrino" en "Sala 2".
+-- ID 1: Una sesión en el PASADO (ya comenzada) para "Torrente, presidente" en "Sala 2".
+-- ID 2: Una sesión en el FUTURO (aún no comenzada) para "El Padrino" en "Sala 1".
 INSERT INTO Session (movieId, roomId, date, price) VALUES
-(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '0 00:05' DAY_MINUTE), 8.50),
+(1, 2, DATE_ADD(DATE(NOW()), INTERVAL '0 00:05' DAY_MINUTE), 8.50),
 -- Sesión 2: hoy 23:55 (sala con 9 localidades)
-(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '0 23:55' DAY_MINUTE), 9.00),
+(2, 1, DATE_ADD(DATE(NOW()), INTERVAL '0 23:55' DAY_MINUTE), 9.00),
 -- 2 sesiones por cada uno de los 6 días siguientes
 (1, 1, DATE_ADD(DATE(NOW()), INTERVAL '1 17:00' DAY_MINUTE), 8.50),
 (2, 2, DATE_ADD(DATE(NOW()), INTERVAL '1 19:00' DAY_MINUTE), 9.00),

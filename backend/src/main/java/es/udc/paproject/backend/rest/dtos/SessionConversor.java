@@ -14,7 +14,7 @@ public class SessionConversor {
                 session.getMovie().getTitle(),
                 session.getRoom().getId(),
                 session.getRoom().getName(),
-                session.getDate(),
+                session.getDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 session.getPrice()
         );
     }
