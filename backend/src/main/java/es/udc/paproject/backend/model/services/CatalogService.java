@@ -11,9 +11,7 @@ import java.time.LocalDate;
 public interface CatalogService {
 
     Session findSession(Long sessionId) throws InstanceNotFoundException, SessionAlreadyStartedException;
-    Session findSessionWithAvailableSeats(Long sessionId) throws InstanceNotFoundException;
-    Block<Movie> findNowPlayingMovies(LocalDate date, int page, int size) throws InvalidDateException;
-    Block<Movie> findMoviesByTitle(String title, int page, int size);
+    Block<Movie> findNowPlayingMovies(LocalDate date) throws InvalidDateException;
     Movie findMovie(Long movieId) throws InstanceNotFoundException;
 
 }

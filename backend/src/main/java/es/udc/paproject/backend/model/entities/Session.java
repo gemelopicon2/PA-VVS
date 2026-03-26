@@ -11,6 +11,9 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    private Long version;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "movieId")
     private Movie movie;
@@ -22,6 +25,8 @@ public class Session {
     private LocalDateTime date;
     private BigDecimal price;
 
+    private int availableTickets;
+
     public Session(){}
 
     public Session(Movie movie, Room room, LocalDateTime date, BigDecimal price) {
@@ -29,6 +34,7 @@ public class Session {
         this.room = room;
         this.date = date;
         this.price = price;
+        this.availableTickets = room.getCapacity();
     }
 
     public Long getId(){ return id;}

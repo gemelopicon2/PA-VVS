@@ -15,9 +15,6 @@ public class Movie {
     private String title;
     private String summary;
     private int duration;
-    @OneToMany(mappedBy = "movie")
-    private Set<Session> sessions = new HashSet<>();
-
 
     public Movie(){}
 

@@ -56,7 +56,7 @@ public class ShoppingServiceImpl implements  ShoppingService {
     public Block<Purchase> getPurchaseHistory(Long userId, int page, int size) throws InstanceNotFoundException {
         User user = userDao.findById(userId).orElseThrow(() -> new InstanceNotFoundException("User", userId));
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
-        Slice<Purchase> slice = purchaseDao.findByUserOrderByDateDesc(user, pageable);
+        Slice<Purchase> slice = purchaseDao.findByUserIdOrderByDateDesc(user, pageable);
         return new Block<>(slice.getContent(), slice.hasNext());
     }
 
