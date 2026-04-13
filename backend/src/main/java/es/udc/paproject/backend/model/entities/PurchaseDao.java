@@ -6,5 +6,5 @@ import org.springframework.data.domain.Slice;
 
 @Repository
 public interface PurchaseDao extends CrudRepository<Purchase, Long> {
-    Slice<Purchase> findByUserIdOrderByDateDesc(User user, Pageable pageable);
+    Slice<Purchase> findByUserIdOrderByDateDesc(Long userId, Pageable pageable);
 }

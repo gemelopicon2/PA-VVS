@@ -15,7 +15,8 @@ public class SessionConversor {
                 session.getRoom().getId(),
                 session.getRoom().getName(),
                 session.getDate(),
-                session.getPrice()
+                session.getPrice(),
+                session.getMovie().getDuration()
         );
     }
 }

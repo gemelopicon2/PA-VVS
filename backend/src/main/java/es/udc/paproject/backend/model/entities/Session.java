@@ -51,4 +51,7 @@ public class Session {
 
     public BigDecimal getPrice(){ return price;}
     public void setPrice(BigDecimal price){ this.price = price;}
+
+    public int getAvailableTickets() { return availableTickets; }
+    public void setAvailableTickets(int availableTickets) { this.availableTickets = availableTickets; }
 }

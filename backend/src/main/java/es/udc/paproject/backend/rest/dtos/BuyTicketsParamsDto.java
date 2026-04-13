@@ -11,12 +11,12 @@ public class BuyTicketsParamsDto {
     private Long sessionId;
 
     @NotNull
-    @Min(value = 1, message = "Debe comprar al menos 1 entrada")
-    @Max(value = 10, message = "No puede comprar más de 10 entradas a la vez")
+    @Min(value = 1)
+    @Max(value = 10)
     private Integer tickets;
 
     @NotNull
-    @Size(min = 16, max = 16, message = "La tarjeta de crédito debe tener exactamente 16 caracteres")
+    @Size(min = 16, max = 16)
     private String creditCard;
 
     public BuyTicketsParamsDto() {}

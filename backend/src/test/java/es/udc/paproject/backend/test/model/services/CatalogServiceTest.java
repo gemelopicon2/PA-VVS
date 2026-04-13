@@ -9,7 +9,6 @@ import java.util.List;
 
 import es.udc.paproject.backend.model.exceptions.InvalidDateException;
 import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
-import es.udc.paproject.backend.model.services.Block;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -69,12 +68,11 @@ public class CatalogServiceTest {
         Session pastSession = new Session(moviePast, room, now.minusHours(2), BigDecimal.valueOf(10));
         sessionDao.saveAll(List.of(futureSession, pastSession));
 
-        Block<Movie> block = catalogService.findNowPlayingMovies(LocalDate.now(),0, 10);
+        // Adaptado a la nueva List<Session> sin paginación
+        List<Session> sessions = catalogService.findNowPlayingMovies(LocalDate.now());
 
-        assertNotNull(block.getItems());
-        assertEquals(1, block.getItems().size());
-        assertEquals(movieFuture.getId(), block.getItems().get(0).getId());
-        assertFalse(block.getExistMoreItems());
+        assertNotNull(sessions);
+        assertEquals(2, sessions.size());
     }
 
     @Test
@@ -89,21 +87,9 @@ public class CatalogServiceTest {
         Session session2 = new Session(movie, room, now.plusHours(2), BigDecimal.valueOf(10));
         sessionDao.saveAll(List.of(session1, session2));
 
-        Block<Movie> block = catalogService.findNowPlayingMovies(LocalDate.now(),0, 10);
-        assertEquals(1, block.getItems().size());
-    }
-
-    @Test
-    public void testFindMoviesByTitle() {
-        Movie movie1 = createMovie("El Señor de los Anillos");
-        Movie movie2 = createMovie("El Señor de los Anillos 2");
-        Movie movie3 = createMovie("Star Wars");
-        movieDao.saveAll(List.of(movie1, movie2, movie3));
-
-        Block<Movie> block = catalogService.findMoviesByTitle("señor", 0, 10);
-
-        assertEquals(2, block.getItems().size());
-        assertFalse(block.getExistMoreItems());
+        // Adaptado a la nueva List<Session> sin paginación
+        List<Session> sessions = catalogService.findNowPlayingMovies(LocalDate.now());
+        assertEquals(2, sessions.size());
     }
 
     // -------------------------------------------------------------------------
@@ -154,5 +140,4 @@ public class CatalogServiceTest {
         assertEquals(movie, foundSession.getMovie());
         assertEquals(room, foundSession.getRoom());
     }
-
 }

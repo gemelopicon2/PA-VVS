@@ -14,10 +14,11 @@ public class SessionDto {
     private String roomName;
     private LocalDateTime date;
     private BigDecimal price;
+    private int duration;
 
     public SessionDto() {}
 
-    public SessionDto(Long id, Long movieId, String movieTitle, Long roomId, String roomName, LocalDateTime date, BigDecimal price) {
+    public SessionDto(Long id, Long movieId, String movieTitle, Long roomId, String roomName, LocalDateTime date, BigDecimal price, int duration) {
         this.id = id;
         this.movieId = movieId;
         this.movieTitle = movieTitle;
@@ -25,6 +26,7 @@ public class SessionDto {
         this.roomName = roomName;
         this.date = date;
         this.price = price;
+        this.duration = duration;
     }
 
     public Long getId() { return id; }
@@ -47,4 +49,7 @@ public class SessionDto {
 
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
+
+    public int getDuration() { return duration; }
+    public void setDuration(int duration) { this.duration = duration; }
 }

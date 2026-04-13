@@ -1,21 +1,26 @@
 package es.udc.paproject.backend.rest.controllers;
 
-import es.udc.paproject.backend.model.entities.Movie;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import es.udc.paproject.backend.model.entities.Session;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.InvalidDateException;
 import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
-import es.udc.paproject.backend.model.services.Block;
 import es.udc.paproject.backend.model.services.CatalogService;
-import es.udc.paproject.backend.rest.common.ErrorsDto;
-import es.udc.paproject.backend.rest.dtos.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.Locale;
+import es.udc.paproject.backend.rest.dtos.MovieCatalogDto;
+import es.udc.paproject.backend.rest.dtos.MovieConversor;
+import es.udc.paproject.backend.rest.dtos.MovieDetailsDto;
+import es.udc.paproject.backend.rest.dtos.SessionConversor;
+import es.udc.paproject.backend.rest.dtos.SessionDto;
 
 @RestController
 @RequestMapping("/catalog")
@@ -24,56 +29,24 @@ public class CatalogController {
     @Autowired
     private CatalogService catalogService;
 
-    @Autowired
-    private MessageSource messageSource;
-
     // FUNC-1: Ver cartelera
     @GetMapping("/movies")
-    public BlockDto<MovieCatalogDto> findNowPlayingMovies(
-            @RequestParam LocalDate date,
-            @RequestParam(required = false) String title,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size)
-            throws InvalidDateException {
+    public List<MovieCatalogDto> findNowPlayingMovies(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) throws InvalidDateException {
 
-        Block<Movie> movieBlock;
-        if (title != null && !title.trim().isEmpty()) {
-            movieBlock = catalogService.findMoviesByTitle(title.trim(), page, size);
-        } else {
-            movieBlock = catalogService.findNowPlayingMovies(date, page, size);
-        }
-
-        return new BlockDto<>(
-                MovieConversor.toMovieCatalogDtos(movieBlock.getItems()),
-                movieBlock.getExistMoreItems()
-        );
+        List<Session> sessions = catalogService.findNowPlayingMovies(date);
+        return MovieConversor.toMovieCatalogDtos(sessions);
     }
 
-
     // FUNC-2: Detalle de la película
-    @GetMapping("/movies/{movieId}")
-    public MovieDetailsDto findMovie(@PathVariable Long movieId) throws InstanceNotFoundException {
-        Movie movie = catalogService.findMovie(movieId);
-        return MovieConversor.toMovieDetailsDto(movie);
+    @GetMapping("/movies/{id}")
+    public MovieDetailsDto findMovie(@PathVariable Long id) throws InstanceNotFoundException {
+        return MovieConversor.toMovieDetailsDto(catalogService.findMovie(id));
     }
 
     // FUNC-3: Detalle de la sesión
-    @GetMapping("/sessions/{sessionId}")
-    public SessionDto findSession(@PathVariable Long sessionId) throws InstanceNotFoundException, SessionAlreadyStartedException {
-        Session session = catalogService.findSession(sessionId);
-        return SessionConversor.toSessionDto(session);
+    @GetMapping("/sessions/{id}")
+    public SessionDto findSession(@PathVariable Long id) throws InstanceNotFoundException, SessionAlreadyStartedException {
+        return SessionConversor.toSessionDto(catalogService.findSession(id));
     }
-
-    @ExceptionHandler(InvalidDateException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ErrorsDto handleInvalidDateException(InvalidDateException exception, Locale locale) {
-        String errorMessage = messageSource.getMessage(
-                "project.exceptions.InvalidDateException", null,
-                "project.exceptions.InvalidDateException", locale
-        );
-        return new ErrorsDto(errorMessage);
-    }
-
-
 }

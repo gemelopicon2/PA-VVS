@@ -34,8 +34,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/users/signUp").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/loginFromServiceToken").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/users/*").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/users/*/changePassword").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("USER", "SELLER")
+                        .requestMatchers(HttpMethod.POST, "/users/*/changePassword").hasAnyRole("USER", "SELLER")
                         .requestMatchers(HttpMethod.GET, "/catalog/movies").permitAll()
                         .requestMatchers(HttpMethod.GET, "/catalog/movies/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/catalog/sessions/**").permitAll()
@@ -45,7 +45,6 @@ public class SecurityConfig {
                         .anyRequest().denyAll());
 
         return http.build();
-
     }
 
     @Bean
