@@ -36,23 +36,28 @@ INSERT INTO Movie (title, summary, duration) VALUES
 -- 4. Insertar 2 sesiones:
 -- ID 1: Una sesión en el PASADO (ya comenzada) para "Torrente, presidente" en "Sala 2".
 -- ID 2: Una sesión en el FUTURO (aún no comenzada) para "El Padrino" en "Sala 1".
-INSERT INTO Session (movieId, roomId, date, price) VALUES
-(1, 2, DATE_ADD(DATE(NOW()), INTERVAL '0 00:05' DAY_MINUTE), 8.50),
--- Sesión 2: hoy 23:55 (sala con 9 localidades)
-(2, 1, DATE_ADD(DATE(NOW()), INTERVAL '0 23:55' DAY_MINUTE), 9.00),
--- 2 sesiones por cada uno de los 6 días siguientes
-(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '1 17:00' DAY_MINUTE), 8.50),
-(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '1 19:00' DAY_MINUTE), 9.00),
-(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '2 17:00' DAY_MINUTE), 8.50),
-(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '2 19:00' DAY_MINUTE), 9.00),
-(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '3 17:00' DAY_MINUTE), 8.50),
-(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '3 19:00' DAY_MINUTE), 9.00),
-(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '4 17:00' DAY_MINUTE), 8.50),
-(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '4 19:00' DAY_MINUTE), 9.00),
-(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '5 17:00' DAY_MINUTE), 8.50),
-(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '5 19:00' DAY_MINUTE), 9.00),
-(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '6 17:00' DAY_MINUTE), 8.50),
-(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '6 19:00' DAY_MINUTE), 9.00);
+INSERT INTO Session (movieId, roomId, date, price, availableTickets, version) VALUES
+-- Hoy
+(1, 2, DATE_ADD(DATE(NOW()), INTERVAL '0 00:05' DAY_MINUTE), 8.50, 50, 0),
+(2, 1, DATE_ADD(DATE(NOW()), INTERVAL '0 23:55' DAY_MINUTE), 9.00,  9, 0),
+-- Día 1
+(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '1 17:00' DAY_MINUTE), 8.50,  9, 0),
+(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '1 19:00' DAY_MINUTE), 9.00, 50, 0),
+-- Día 2
+(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '2 17:00' DAY_MINUTE), 8.50,  9, 0),
+(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '2 19:00' DAY_MINUTE), 9.00, 50, 0),
+-- Día 3
+(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '3 17:00' DAY_MINUTE), 8.50,  9, 0),
+(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '3 19:00' DAY_MINUTE), 9.00, 50, 0),
+-- Día 4
+(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '4 17:00' DAY_MINUTE), 8.50,  9, 0),
+(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '4 19:00' DAY_MINUTE), 9.00, 50, 0),
+-- Día 5
+(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '5 17:00' DAY_MINUTE), 8.50,  9, 0),
+(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '5 19:00' DAY_MINUTE), 9.00, 50, 0),
+-- Día 6
+(1, 1, DATE_ADD(DATE(NOW()), INTERVAL '6 17:00' DAY_MINUTE), 8.50,  9, 0),
+(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '6 19:00' DAY_MINUTE), 9.00, 50, 0);
 
 -- 5. Insertar 2 compras:
 -- El usuario "viewer" compró 2 entradas para la sesión ID 1 (que ya empezó).
