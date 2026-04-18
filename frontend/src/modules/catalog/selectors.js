@@ -1,0 +1,1 @@
+const getMovies = state => state.catalog.movies;
