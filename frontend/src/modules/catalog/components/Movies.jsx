@@ -10,7 +10,7 @@ const Movies = ({ movies }) => {
         <div className="billboard-movies">
             {movies.map(movie => (
                 <div key={movie.id} className="movie-card">
-                    <h3>{movie.name}</h3>
+                    <h3>{movie.title}</h3>
                     <div className="sessions">
                         {movie.sessions.map(session => (
                             <span key={session.id} className="session-time">

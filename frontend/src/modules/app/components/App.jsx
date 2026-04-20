@@ -31,16 +31,19 @@ const App = () => {
         }
 
         const getBillboard = async () => {
+            dispatch(catalog.actions.clearBillboard(today));
             const response = await backend.catalogService.getBillboard(today);
             if (response.ok) {
                 dispatch(catalog.actions.getBillboardCompleted(response.payload));
             }
         }
 
-        tryLoginFromServiceToken();
-        getBillboard();
-    
-    }, [dispatch]);
+        const initApp = async () => {
+                    await tryLoginFromServiceToken(); // 1º Intenta el login (y limpia el token si es inválido)
+                    await getBillboard();             // 2º Pide la cartelera de forma segura
+                };
+        initApp();
+    }, [dispatch, today]);
 
     return (
         <div className="d-flex flex-column min-vh-100">
@@ -51,5 +54,5 @@ const App = () => {
     );
 
 }
-    
+
 export default App;
