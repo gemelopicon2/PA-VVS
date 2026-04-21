@@ -21,7 +21,7 @@ const Billboard = () => {
     return (
        <div>
            <DateSelector id="billboardDate" className="mb-2 w-auto"
-               value={billboardDate} onChange={e => handleBillboardDateChange(e.target.value)} />
+               value={billboardDate || ""} onChange={e => handleBillboardDateChange(e.target.value)} />
            <Movies movies={movies}/>
        </div>
     );
