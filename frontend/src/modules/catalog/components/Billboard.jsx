@@ -3,6 +3,7 @@ import Movies from './Movies';
 import * as selectors from '../selectors';
 import backend from '../../../backend';
 import * as actions from '../actions';
+import DateSelector from "./DateSelector";
 
 const Billboard = () => {
     const movies = useSelector(selectors.getMovies);
@@ -17,9 +18,14 @@ const Billboard = () => {
         }
     }
 
-  return (
-              <Movies movies={movies}/>
-      );
+    return (
+       <div>
+           <DateSelector id="billboardDate" className="mb-2 w-auto"
+               value={billboardDate} onChange={e => handleBillboardDateChange(e.target.value)} />
+           <Movies movies={movies}/>
+       </div>
+    );
+
 
 }
 
