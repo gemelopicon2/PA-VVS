@@ -6,6 +6,7 @@ import AppGlobalComponents from './AppGlobalComponents';
 import Home from './Home';
 import {Login, SignUp, UpdateProfile, ChangePassword, Logout} from '../../users';
 import users from '../../users';
+import {MovieDetails, SessionDetails} from '../../catalog';
 
 const Body = () => {
 
@@ -22,6 +23,8 @@ const Body = () => {
                 {loggedIn && <Route path="/users/logout" element={<Logout/>}/>}
                 {!loggedIn && <Route path="/users/login" element={<Login/>}/>}
                 {!loggedIn && <Route path="/users/signup" element={<SignUp/>}/>}
+                <Route path="/catalog/movie-details/:id" element={<MovieDetails />} />
+                <Route path="/catalog/session-details/:id" element={<SessionDetails />} />
             </Routes>
        </Container>
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import {BrowserRouter} from 'react-router';
 import {Provider} from 'react-redux';
 import {IntlProvider} from 'react-intl';
+import { BrowserRouter } from 'react-router';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/fontawesome.css';
