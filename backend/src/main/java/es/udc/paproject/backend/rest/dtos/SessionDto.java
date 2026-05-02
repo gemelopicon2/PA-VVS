@@ -15,10 +15,11 @@ public class SessionDto {
     private LocalDateTime date;
     private BigDecimal price;
     private int duration;
+    private int availableTickets;
 
     public SessionDto() {}
 
-    public SessionDto(Long id, Long movieId, String movieTitle, Long roomId, String roomName, LocalDateTime date, BigDecimal price, int duration) {
+    public SessionDto(Long id, Long movieId, String movieTitle, Long roomId, String roomName, LocalDateTime date, BigDecimal price, int duration, int availableTickets) {
         this.id = id;
         this.movieId = movieId;
         this.movieTitle = movieTitle;
@@ -27,6 +28,7 @@ public class SessionDto {
         this.date = date;
         this.price = price;
         this.duration = duration;
+        this.availableTickets = availableTickets;
     }
 
     public Long getId() { return id; }
@@ -52,4 +54,7 @@ public class SessionDto {
 
     public int getDuration() { return duration; }
     public void setDuration(int duration) { this.duration = duration; }
+
+    public int getAvailableTickets() { return availableTickets; }
+    public void setAvailableTickets(int availableTickets) { this.availableTickets = availableTickets; }
 }
