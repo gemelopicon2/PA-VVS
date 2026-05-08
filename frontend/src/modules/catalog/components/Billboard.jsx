@@ -27,7 +27,9 @@ const Billboard = () => {
     };
 
     useEffect(() => {
-        handleBillboardDateChange(toIsoDate(new Date()));
+        if (!billboardDate) {
+            handleBillboardDateChange(toIsoDate(new Date()));
+        }
     }, []);
 
     return (

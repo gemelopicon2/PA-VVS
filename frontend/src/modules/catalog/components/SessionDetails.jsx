@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useParams, useNavigate, Link } from 'react-router';
 import { useSelector } from 'react-redux';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import backend from '../../../backend';
@@ -73,7 +73,11 @@ const SessionDetails = () => {
 
             <div className="card mt-3">
                 <div className="card-body">
-                    <h2 className="card-title">{session.movieTitle}</h2>
+                    <h2 className="card-title">
+                        <Link to={`/catalog/movie-details/${session.movieId}`}>
+                            {session.movieTitle}
+                        </Link>
+                    </h2>
                     <ul className="list-group list-group-flush mb-3">
                         <li className="list-group-item"><strong>Duración:</strong> {session.duration} minutos</li>
                         <li className="list-group-item"><strong>Precio:</strong> {session.price} €</li>
