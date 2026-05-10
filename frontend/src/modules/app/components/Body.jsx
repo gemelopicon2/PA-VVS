@@ -10,9 +10,11 @@ import users from '../../users';
 import {MovieDetails, SessionDetails} from '../../catalog';
 import PurchaseCompleted from '../../shopping/components/PurchaseCompleted';
 import { PurchaseHistory } from '../../shopping';
+import { DeliverTickets } from '../../shopping';
 
 const Body = () => {
     const loggedIn = useSelector(users.selectors.isLoggedIn);
+    const userRole = useSelector(users.selectors.getUserRole);
 
     return (
        <Container className="my-4 justify-content-center flex-grow-1">
@@ -30,6 +32,9 @@ const Body = () => {
                 <Route path="/catalog/session-details/:id" element={<SessionDetails />} />
 
                 {loggedIn && <Route path="/shopping/purchase-completed/:id" element={<PurchaseCompleted />} />}
+                {loggedIn && userRole === "SELLER" && (
+                    <Route path="/shopping/deliver-tickets" element={<DeliverTickets />} />
+                )}
             </Routes>
        </Container>
     );

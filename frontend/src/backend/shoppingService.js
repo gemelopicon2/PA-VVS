@@ -10,3 +10,6 @@ export const buy = async (sessionId, tickets, creditCard) => {
 
 export const getPurchaseHistory = (page) =>
     appFetch('GET', `/shopping/purchases?page=${page}`);
+
+export const deliverTickets = (purchaseId, creditCard) =>
+    appFetch('POST', `/shopping/purchases/${purchaseId}/deliver`, { creditCard });

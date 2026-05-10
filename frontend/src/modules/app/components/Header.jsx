@@ -11,6 +11,7 @@ import users from '../../users';
 const Header = () => {
 
     const userName = useSelector(users.selectors.getUserName);
+    const userRole = useSelector(users.selectors.getUserRole);
 
     return (
 
@@ -23,6 +24,11 @@ const Header = () => {
                     {userName ? (
                         <Nav className="ms-auto">
                             <NavDropdown title={<><span className="fa-solid fa-user"></span>&nbsp;{userName}</>} align="end" id="user-dropdown">
+                                {userRole === "SELLER" && (
+                                    <NavDropdown.Item as={Link} to="/shopping/deliver-tickets">
+                                        Entregar entradas
+                                    </NavDropdown.Item>
+                                )}
                                 <NavDropdown.Item as={Link} to="/shopping/purchase-history">
                                     Historial de compras
                                 </NavDropdown.Item>
