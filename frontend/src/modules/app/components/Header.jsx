@@ -23,6 +23,9 @@ const Header = () => {
                     {userName ? (
                         <Nav className="ms-auto">
                             <NavDropdown title={<><span className="fa-solid fa-user"></span>&nbsp;{userName}</>} align="end" id="user-dropdown">
+                                <NavDropdown.Item as={Link} to="/shopping/purchase-history">
+                                    Historial de compras
+                                </NavDropdown.Item>
                                 <NavDropdown.Item as={Link} to="/users/update-profile">
                                     <FormattedMessage id="project.users.UpdateProfile.title"/>
                                 </NavDropdown.Item>

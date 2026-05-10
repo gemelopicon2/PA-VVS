@@ -9,6 +9,7 @@ import {Login, SignUp, UpdateProfile, ChangePassword, Logout} from '../../users'
 import users from '../../users';
 import {MovieDetails, SessionDetails} from '../../catalog';
 import PurchaseCompleted from '../../shopping/components/PurchaseCompleted';
+import { PurchaseHistory } from '../../shopping';
 
 const Body = () => {
     const loggedIn = useSelector(users.selectors.isLoggedIn);
@@ -22,6 +23,7 @@ const Body = () => {
                 {loggedIn && <Route path="/users/change-password" element={<ChangePassword/>}/>}
                 {loggedIn && <Route path="/users/logout" element={<Logout/>}/>}
                 {!loggedIn && <Route path="/users/login" element={<Login/>}/>}
+                {loggedIn && <Route path="/shopping/purchase-history" element={<PurchaseHistory />} />}
                 {!loggedIn && <Route path="/users/signup" element={<SignUp/>}/>}
 
                 <Route path="/catalog/movie-details/:id" element={<MovieDetails />} />

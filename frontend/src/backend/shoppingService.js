@@ -7,3 +7,6 @@ export const buy = async (sessionId, tickets, creditCard) => {
         creditCard: creditCard
     });
 };
+
+export const getPurchaseHistory = (page) =>
+    appFetch('GET', `/shopping/purchases?page=${page}`);
