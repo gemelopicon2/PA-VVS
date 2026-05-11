@@ -29,9 +29,12 @@ const Header = () => {
                                         Entregar entradas
                                     </NavDropdown.Item>
                                 )}
-                                <NavDropdown.Item as={Link} to="/shopping/purchase-history">
-                                    Historial de compras
-                                </NavDropdown.Item>
+                                {/* CORRECCIÓN: Restringido el acceso al historial solo a no-taquilleros */}
+                                {userRole !== "SELLER" && (
+                                    <NavDropdown.Item as={Link} to="/shopping/purchase-history">
+                                        Historial de compras
+                                    </NavDropdown.Item>
+                                )}
                                 <NavDropdown.Item as={Link} to="/users/update-profile">
                                     <FormattedMessage id="project.users.UpdateProfile.title"/>
                                 </NavDropdown.Item>

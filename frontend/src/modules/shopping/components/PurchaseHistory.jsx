@@ -1,15 +1,25 @@
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FormattedDate, FormattedTime, FormattedNumber } from 'react-intl';
 import backend from '../../../backend';
 import { BackLink, Errors } from '../../common';
+import shopping from '../../shopping';
 
 const PurchaseHistory = () => {
 
-    const [purchases, setPurchases] = useState([]);
+    const dispatch = useDispatch();
+    const purchaseSearch = useSelector(shopping.selectors.getPurchaseSearch);
+
+    const purchases = purchaseSearch ? purchaseSearch.items : [];
+    const existMore = purchaseSearch ? purchaseSearch.existMoreItems : false;
+
     const [page, setPage] = useState(0);
-    const [existMore, setExistMore] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+        return () => dispatch(shopping.actions.clearPurchaseSearch());
+    }, [dispatch]);
 
     const loadPurchases = async (pageToLoad) => {
         setLoading(true);
@@ -17,8 +27,7 @@ const PurchaseHistory = () => {
         const response = await backend.shoppingService.getPurchaseHistory(pageToLoad);
         setLoading(false);
         if (response.ok) {
-            setPurchases(response.payload.items);
-            setExistMore(response.payload.existMoreItems);
+            dispatch(shopping.actions.findPurchasesCompleted(response.payload));
         } else {
             setError(response.payload);
         }
