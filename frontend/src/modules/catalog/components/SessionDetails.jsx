@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import backend from '../../../backend';
 import users from '../../users';
 import { BackLink, Errors } from '../../common';
+import shopping from '../../shopping';
 
 const SessionDetails = () => {
     const loggedIn = useSelector(users.selectors.isLoggedIn);
+    const userRole = useSelector(users.selectors.getUserRole);
+    const dispatch = useDispatch();
+
     const [session, setSession] = useState(null);
 
     const [tickets, setTickets] = useState(1);
@@ -35,6 +39,11 @@ const SessionDetails = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        if (tickets < 1 || tickets > 10) {
+            setBackendErrors({ globalError: "El número de localidades debe estar entre 1 y 10." });
+            return;
+        }
+
         const response = await backend.shoppingService.buy(
             sessionId,
             tickets,
@@ -42,6 +51,7 @@ const SessionDetails = () => {
         );
 
         if (response.ok) {
+            dispatch(shopping.actions.buyCompleted(response.payload.id));
             navigate(`/shopping/purchase-completed/${response.payload.id}`);
         } else {
             setBackendErrors(response.payload);
@@ -91,7 +101,7 @@ const SessionDetails = () => {
                         <li className="list-group-item"><strong>Entradas disponibles:</strong> {session.availableTickets}</li>
                     </ul>
 
-                    {loggedIn && session.availableTickets > 0 && (
+                    {loggedIn && userRole !== "SELLER" && session.availableTickets > 0 && (
                         <div className="mt-4 border-top pt-3">
                             <h4>Comprar Entradas</h4>
                             <form onSubmit={handleSubmit}>
@@ -126,7 +136,7 @@ const SessionDetails = () => {
                         </div>
                     )}
 
-                    {loggedIn && session.availableTickets === 0 && (
+                    {loggedIn && userRole !== "SELLER" && session.availableTickets === 0 && (
                         <div className="mt-4 alert alert-warning">
                             Lo sentimos, las entradas están agotadas.
                         </div>
