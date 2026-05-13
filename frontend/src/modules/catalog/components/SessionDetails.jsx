@@ -83,26 +83,26 @@ const SessionDetails = () => {
 
             <div className="card mt-3">
                 <div className="card-body">
-                    <h2 className="card-title">
+                    <h2 id="movieTitle" className="card-title">
                         <Link to={`/catalog/movie-details/${session.movieId}`}>
                             {session.movieTitle}
                         </Link>
                     </h2>
                     <ul className="list-group list-group-flush mb-3">
-                        <li className="list-group-item"><strong>Duración:</strong> {session.duration} minutos</li>
-                        <li className="list-group-item"><strong>Precio:</strong> {session.price} €</li>
-                        <li className="list-group-item">
+                        <li id="duration" className="list-group-item"><strong>Duración:</strong> {session.duration} minutos</li>
+                        <li id="price" className="list-group-item"><strong>Precio:</strong> {session.price} €</li>
+                        <li id="date" className="list-group-item">
                             <strong>Día:</strong> <FormattedDate value={new Date(session.date)} />
                         </li>
-                        <li className="list-group-item">
+                        <li id="time" className="list-group-item">
                             <strong>Hora:</strong> <FormattedTime value={new Date(session.date)} />
                         </li>
-                        <li className="list-group-item"><strong>Sala:</strong> {session.roomName}</li>
-                        <li className="list-group-item"><strong>Entradas disponibles:</strong> {session.availableTickets}</li>
+                        <li id="room" className="list-group-item"><strong>Sala:</strong> {session.roomName}</li>
+                        <li id="availableTickets" className="list-group-item"><strong>Entradas disponibles:</strong> {session.availableTickets}</li>
                     </ul>
 
                     {loggedIn && userRole !== "SELLER" && session.availableTickets > 0 && (
-                        <div className="mt-4 border-top pt-3">
+                        <div id="buyForm" className="mt-4 border-top pt-3">
                             <h4>Comprar Entradas</h4>
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-3">

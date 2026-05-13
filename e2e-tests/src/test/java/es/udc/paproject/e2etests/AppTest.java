@@ -51,4 +51,47 @@ public class AppTest {
     public void testLogin() {
         login("testviewer", "pa2526");
     }
+    @Test
+    public void testSessionDetails() {
+
+        //login
+        login("testviewer", "pa2526");
+
+        //En el desplegable del día, seleccionar la segunda opción (mañana)
+        Select dateSelect = new Select(driver.findElement(By.id("billboardDate")));
+        dateSelect.selectByIndex(1);
+
+        //Localizar el enlace de la primera película y guardar su texto
+        List<WebElement> movieLinks = driver.findElements(By.cssSelector(".card-title a"));
+        WebElement firstMovieLink = movieLinks.get(0);
+        String movieName = firstMovieLink.getText();
+
+        //Localizar el enlace de la primera sesión de esa película y guardar su texto
+        List<WebElement> sessionLinks = driver.findElements(By.cssSelector(".sessions a"));
+        WebElement firstSessionLink = sessionLinks.get(0);
+        String sessionTime = firstSessionLink.getText();
+
+        //Hacer clic en el enlace de la primera sesión
+        firstSessionLink.click();
+
+        //Comprobar que existen todos los campos esperados (por id)
+        driver.findElement(By.id("movieTitle"));
+        driver.findElement(By.id("duration"));
+        driver.findElement(By.id("price"));
+        driver.findElement(By.id("date"));
+        driver.findElement(By.id("time"));
+        driver.findElement(By.id("room"));
+        driver.findElement(By.id("availableTickets"));
+
+        //Comprobar que el nombre de la película coincide
+        WebElement movieTitleElement = driver.findElement(By.id("movieTitle"));
+        assertEquals(movieName, movieTitleElement.getText());
+
+        //Comprobar que la hora de la sesión coincide
+        WebElement timeElement = driver.findElement(By.id("time"));
+        assertTrue(timeElement.getText().contains(sessionTime));
+
+        //Comprobar que incluye el formulario para comprar entradas.
+        driver.findElement(By.id("buyForm"));
+    }
 }
