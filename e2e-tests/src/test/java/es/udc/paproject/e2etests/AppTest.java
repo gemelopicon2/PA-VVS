@@ -51,6 +51,7 @@ public class AppTest {
     public void testLogin() {
         login("testviewer", "pa2526");
     }
+
     @Test
     public void testSessionDetails() {
 
@@ -93,5 +94,46 @@ public class AppTest {
 
         //Comprobar que incluye el formulario para comprar entradas.
         driver.findElement(By.id("buyForm"));
+    }
+
+    @Test
+    public void testBuyTickets() {
+        //login
+        login("testviewer", "pa2526");
+
+        //Acceder a la URL de la información detallada de la sesión.
+        driver.get("http://localhost:5173/catalog/session-details/2");
+
+        //Localizar el elemento que contiene el nombre de la película y guardarlo
+        WebElement movieTitleElement = driver.findElement(By.cssSelector("h2.card-title a"));
+        String expectedMovieTitle = movieTitleElement.getText();
+
+        //Rellenar formulario de compra de entradas
+        WebElement ticketsInput = driver.findElement(By.id("tickets"));
+        ticketsInput.clear();
+        ticketsInput.sendKeys("2");
+
+        WebElement creditCardInput = driver.findElement(By.id("creditCard"));
+        creditCardInput.clear();
+        creditCardInput.sendKeys("1234567890123456");
+
+        //Hacer clic en el botón de comprar
+        WebElement buyButton = driver.findElement(By.cssSelector("button[type='submit']"));
+        buyButton.click();
+
+        //Localizar el elemento que contiene el identificador de la compra y guardarlo
+        WebElement purchaseIdElement = driver.findElement(By.cssSelector(".alert-success strong"));
+        String expectedPurchaseId = purchaseIdElement.getText();
+
+        //Hacer clic en el enlace u opción que muestra las compras
+        driver.findElement(By.id("user-dropdown")).click();
+        driver.findElement(By.cssSelector("a[href='/shopping/purchase-history']")).click();
+
+        //Comprobar que el identificador de la primera compra y la película coinciden
+        WebElement firstPurchaseCard = driver.findElement(By.cssSelector(".list-group-item"));
+        String purchaseCardText = firstPurchaseCard.getText();
+
+        assertTrue(purchaseCardText.contains(expectedPurchaseId), "El ID de la compra no coincide en el historial.");
+        assertTrue(purchaseCardText.contains(expectedMovieTitle), "El título de la película no coincide en el historial.");
     }
 }
