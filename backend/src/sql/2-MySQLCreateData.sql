@@ -17,11 +17,13 @@ ALTER TABLE Room AUTO_INCREMENT = 1;
 ALTER TABLE Movie AUTO_INCREMENT = 1;
 ALTER TABLE User AUTO_INCREMENT = 1;
 
--- 1. Insertar 2 usuarios: "viewer" (rol 0) y "ticketseller" (rol 1)
--- Ambos con la contraseña "pa2526" cifrada.
+-- 1. Insertar usuarios: "viewer" (rol 0), "ticketseller" (rol 1)
 INSERT INTO User (userName, password, firstName, lastName, email, role) VALUES
-('viewer', '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPlCAz2gA7EOIZhbkvsPFew/5u', 'Espectador', 'Pruebas', 'viewer@udc.es', 0),
-('ticketseller', '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPlCAz2gA7EOIZhbkvsPFew/5u', 'Taquillero', 'Pruebas', 'seller@udc.es', 1);
+('viewer',          '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPlCAz2gA7EOIZhbkvsPFew/5u', 'Espectador', 'Pruebas',  'viewer@udc.es',          0),
+('ticketseller',    '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPlCAz2gA7EOIZhbkvsPFew/5u', 'Taquillero', 'Pruebas',  'seller@udc.es',          1),
+('testviewer',      '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPlCAz2gA7EOIZhbkvsPFew/5u', 'Test',       'Viewer',   'testviewer@udc.es',      0),
+('testticketseller','$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPlCAz2gA7EOIZhbkvsPFew/5u', 'Test',       'Seller',   'testticketseller@udc.es',1);
+-- IDs resultantes: viewer=1, ticketseller=2, testviewer=3, testticketseller=4
 
 -- 2. Insertar 2 salas
 INSERT INTO Room (name, capacity) VALUES
@@ -33,9 +35,7 @@ INSERT INTO Movie (title, summary, duration) VALUES
 ('Torrente, presidente', 'Torrente, presidente es la sexta parte de la saga de películas realizadas por el director Santiago Segura...', 166),
 ('El Padrino', 'La familia criminal Corleone...', 175);
 
--- 4. Insertar 2 sesiones:
--- ID 1: Una sesión en el PASADO (ya comenzada) para "Torrente, presidente" en "Sala 2".
--- ID 2: Una sesión en el FUTURO (aún no comenzada) para "El Padrino" en "Sala 1".
+-- 4. Insertar sesiones
 INSERT INTO Session (movieId, roomId, date, price, availableTickets, version) VALUES
 -- Hoy
 (1, 2, DATE_ADD(DATE(NOW()), INTERVAL '0 00:05' DAY_MINUTE), 8.50, 50, 0),
@@ -57,10 +57,15 @@ INSERT INTO Session (movieId, roomId, date, price, availableTickets, version) VA
 (2, 2, DATE_ADD(DATE(NOW()), INTERVAL '5 19:00' DAY_MINUTE), 9.00, 50, 0),
 -- Día 6
 (1, 1, DATE_ADD(DATE(NOW()), INTERVAL '6 17:00' DAY_MINUTE), 8.50,  9, 0),
-(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '6 19:00' DAY_MINUTE), 9.00, 50, 0);
+(2, 2, DATE_ADD(DATE(NOW()), INTERVAL '6 19:00' DAY_MINUTE), 9.00, 50, 0),
+-- E2E: sesión para mañana a las 01:00 con entradas libres (id=15)
+(1, 2, DATE_ADD(DATE(NOW()), INTERVAL '1 01:00' DAY_MINUTE), 8.50, 50, 0);
 
--- 5. Insertar 2 compras:
--- El usuario "viewer" compró 2 entradas para la sesión ID 1 (que ya empezó).
+-- 5. Insertar compras
+-- Las dos compras originales de "viewer" (id=1) para sesión id=1
 INSERT INTO Purchase (userId, sessionId, tickets, creditCard, date, delivered) VALUES
 (1, 1, 2, '1234567890123456', ADDDATE(NOW(), INTERVAL -2 DAY), 0),
-(1, 1, 3, '9876543210987654', ADDDATE(NOW(), INTERVAL -1 DAY), 0);
+(1, 1, 3, '9876543210987654', ADDDATE(NOW(), INTERVAL -1 DAY), 0),
+-- E2E: compra de "testviewer" (id=3) para la sesión de mañana a las 01:00 (id=15)
+(3, 15, 2, '1111222233334444', ADDDATE(NOW(), INTERVAL -1 DAY), 0);
+-- IDs resultantes: compra E2E = id 3
