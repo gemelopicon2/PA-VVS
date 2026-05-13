@@ -136,4 +136,49 @@ public class AppTest {
         assertTrue(purchaseCardText.contains(expectedPurchaseId), "El ID de la compra no coincide en el historial.");
         assertTrue(purchaseCardText.contains(expectedMovieTitle), "El título de la película no coincide en el historial.");
     }
+
+
+    @Test
+    public void testDeliverTickets() {
+        //login
+        login("testticketseller", "pa2526");
+
+        //Acceder a entregar entradas
+        WebElement userDropdown = driver.findElement(By.id("user-dropdown"));
+        userDropdown.click();
+        // Nota: sin WebDriverWait explícito, se usará el implicitlyWait de 10s
+        WebElement deliverLink = driver.findElement(By.linkText("Entregar entradas"));
+        deliverLink.click();
+
+        //Rellenar formulario de la entrada
+        WebElement purchaseIdInput = driver.findElement(By.id("purchaseId"));
+        purchaseIdInput.sendKeys("3");
+        WebElement creditCardInput = driver.findElement(By.id("creditCard"));
+        creditCardInput.sendKeys("1111222233334444");
+
+        //Entregar
+        WebElement submitButton = driver.findElement(By.cssSelector("button[type='submit']"));
+        submitButton.click();
+
+        //Comprobar mensaje de éxito
+        WebElement successAlert = driver.findElement(By.cssSelector(".alert-success"));
+        String successText = successAlert.getText();
+        assertTrue(successText.contains("Entradas entregadas") || successText.contains("correctamente"));
+
+        //Rellenar otra vez el formulario con la misma entradda
+        purchaseIdInput = driver.findElement(By.id("purchaseId"));
+        purchaseIdInput.sendKeys("3");
+        creditCardInput = driver.findElement(By.id("creditCard"));
+        creditCardInput.sendKeys("1111222233334444");
+
+        //Entregar
+        submitButton = driver.findElement(By.cssSelector("button[type='submit']"));
+        submitButton.click();
+
+        //Comprobar mensaje de error
+        WebElement errorAlert = driver.findElement(By.cssSelector(".alert-danger"));
+        String errorText = errorAlert.getText();
+        assertTrue(errorText.contains("ya han sido entregados"));
+    }
+
 }
