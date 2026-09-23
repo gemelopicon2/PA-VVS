@@ -1,44 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>es.udc.paproject</groupId>
     <artifactId>pa-project-backend</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    
+
     <name>PA Project Backend</name>
-	<description>PA Project Backend</description>
+    <description>PA Project Backend</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.3.8</version>
     </parent>
-    
+
     <properties>
-    
         <!--  Data source properties -->
         <dataSource.user>pa</dataSource.user>
         <dataSource.password>pa</dataSource.password>
         <testDataSource.user>${dataSource.user}</testDataSource.user>
         <testDataSource.password>${dataSource.password}</testDataSource.password>
-    
-    	<!--  Compiler options -->
-   		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!--  Compiler options -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>21</java.version>
-        
+
         <!-- Package versions -->
         <jjwt.version>0.12.6</jjwt.version>
-        
+
         <!-- Plugin versions -->
         <surefireMavenPlugin.version>3.5.2</surefireMavenPlugin.version>
         <sqlPlugin.version>3.0.0</sqlPlugin.version>
-        
+
+        <!-- Herramientas de la práctica (Versiones) -->
+        <jqwik.version>1.8.2</jqwik.version>
+        <archunit.version>1.2.1</archunit.version>
+        <jetm.version>1.2.3</jetm.version>
+        <checkstyle.version>3.3.1</checkstyle.version>
+        <spotbugs.version>4.8.3.1</spotbugs.version>
+        <jacoco.version>0.8.11</jacoco.version>
+        <pitest.version>1.15.8</pitest.version>
     </properties>
-    
+
     <profiles>
         <profile>
             <id>mysql</id>
@@ -63,43 +70,43 @@
     </profiles>
 
     <dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>${jdbcDriver.groupId}</groupId>
-			<artifactId>${jdbcDriver.artifactId}</artifactId>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>${jdbcDriver.groupId}</groupId>
+            <artifactId>${jdbcDriver.artifactId}</artifactId>
             <version>${jdbcDriver.version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>${jjwt.version}</version>
-		</dependency>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
@@ -128,24 +135,36 @@
             <version>1.2.1</version>
             <scope>test</scope>
         </dependency>
-		
+
+        <!-- Dependencias de herramientas de la práctica -->
+        <dependency>
+            <groupId>net.jqwik</groupId>
+            <artifactId>jqwik</artifactId>
+            <version>${jqwik.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>${archunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>fm.void.jetm</groupId>
+            <artifactId>jetm</artifactId>
+            <version>${jetm.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
-    
-    	<!-- When using spring-boot-starter-parent, files under 
-    	     "src/main/resources" are automatically filtered and
-    	     "@propertyName@" notation is used instead of "${propertyName}". -->
-
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
                 <filtering>true</filtering>
             </testResource>
         </testResources>
-    
+
         <plugins>
-        
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -161,15 +180,7 @@
             </plugin>
 
 
-            <!--
-                 - Configuration specifies onError="continue" since SQL scripts
-                   try to drop tables before creating them (which causes errors
-                   if such tables do not exist yet).
-
-                 - Configuration specifies autocommit="true" since some drivers
-                   (e.g. the PostgreSQL JDBC 2 driver) do not commit changes if
-                   some error occurs.
-            -->
+            <!-- SQL Maven Plugin original -->
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -189,16 +200,12 @@
                     <password>${dataSource.password}</password>
                     <autocommit>true</autocommit>
                     <onError>continue</onError>
-                    <orderFile>ascending</orderFile> 
+                    <orderFile>ascending</orderFile>
                     <fileset>
                         <basedir>${basedir}</basedir>
                         <includes>
-                            <include>
-                                src/sql/${dataSource.createTablesScript}
-                            </include>
-                            <include>
-                                src/sql/${dataSource.createDataScript}
-                            </include>
+                            <include>src/sql/${dataSource.createTablesScript}</include>
+                            <include>src/sql/${dataSource.createDataScript}</include>
                         </includes>
                     </fileset>
                 </configuration>
@@ -219,9 +226,7 @@
                             <fileset>
                                 <basedir>${basedir}</basedir>
                                 <includes>
-                                    <include>
-                                        src/sql/${dataSource.createTablesScript}
-                                    </include>
+                                    <include>src/sql/${dataSource.createTablesScript}</include>
                                 </includes>
                             </fileset>
                         </configuration>
@@ -267,13 +272,70 @@
                     <dependency>
                         <groupId>org.pitest</groupId>
                         <artifactId>pitest-junit5-plugin</artifactId>
-                        <version>1.2.1</version>
+                        <version>1.2.3</version>
                     </dependency>
                 </dependencies>
             </plugin>
-            
+
+            <!-- Plugins de las herramientas de la práctica -->
+
+            <!-- CheckStyle: Análisis estático de formato (Caixa branca) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.version}</version>
+            </plugin>
+
+            <!-- SpotBugs: Análisis estático funcional (Caixa branca) -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs.version}</version>
+            </plugin>
+
+            <!-- JaCoCo: Medición de cobertura de código -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- PiTest: Herramienta de mutación de código -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>${pitest.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>1.2.3</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <targetClasses>
+                        <param>es.udc.paproject.*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>es.udc.paproject.*</param>
+                    </targetTests>
+                </configuration>
+            </plugin>
+
         </plugins>
-
     </build>
-
 </project>
