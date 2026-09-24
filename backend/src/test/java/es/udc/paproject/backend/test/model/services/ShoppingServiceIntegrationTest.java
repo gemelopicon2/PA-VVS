@@ -24,8 +24,7 @@ import es.udc.paproject.backend.model.entities.Session;
 import es.udc.paproject.backend.model.entities.SessionDao;
 import es.udc.paproject.backend.model.entities.User;
 import es.udc.paproject.backend.model.entities.UserDao;
-// IMPORTANTE: Asegúrate de importar la interfaz de tu servicio real
-// import es.udc.paproject.backend.model.services.ShoppingService; 
+
 import es.udc.paproject.backend.model.services.ShoppingServiceImpl;
 
 @SpringBootTest
@@ -33,7 +32,6 @@ import es.udc.paproject.backend.model.services.ShoppingServiceImpl;
 @Transactional
 public class ShoppingServiceIntegrationTest {
 
-    // Cambia ShoppingServiceImpl por la interfaz ShoppingService si tu arquitectura lo requiere
     @Autowired
     private ShoppingServiceImpl shoppingService; 
 
@@ -62,7 +60,6 @@ public class ShoppingServiceIntegrationTest {
         Room room = new Room("Room A", 10);
         roomDao.save(room);
 
-        // Se crea la sesión con 10 tickets disponibles basados en la capacidad de la sala
         testSession = new Session(movie, room, LocalDateTime.now().plusDays(2), new BigDecimal("7.50"));
         sessionDao.save(testSession);
     }

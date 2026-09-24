@@ -52,7 +52,6 @@ public class ShoppingControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     public void testBuyTicketsAsUserReturnsCreatedStatus() throws Exception {
-        // Arrange
         String requestBody = "{\"sessionId\": 1, \"tickets\": 2, \"creditCard\": \"1234567890123456\"}";
         
         User user = new User("user", "pass", "N", "L", "e@udc.es");
@@ -62,7 +61,6 @@ public class ShoppingControllerTest {
 
         when(shoppingService.buyTickets(anyLong(), anyLong(), anyInt(), anyString())).thenReturn(mockPurchase);
 
-        // Act & Assert (Un único assert para estado HTTP)
         mockMvc.perform(post("/shopping/purchases")
                 .requestAttr("userId", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -72,15 +70,13 @@ public class ShoppingControllerTest {
 
     @Test
     public void testBuyTicketsAsUnauthenticatedReturnsUnauthorized() throws Exception {
-        // Arrange (Sin @WithMockUser)
         String requestBody = "{\"sessionId\": 1, \"tickets\": 2, \"creditCard\": \"1234567890123456\"}";
 
-        // Act & Assert
         mockMvc.perform(post("/shopping/purchases")
                 .requestAttr("userId", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-                .andExpect(status().isForbidden()); // O isUnauthorized() dependiendo de la config de tu JwtFilter
+                .andExpect(status().isForbidden());
     }
 
     // --- FUNC-5: Histórico de compras ---
@@ -88,11 +84,9 @@ public class ShoppingControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     public void testGetPurchaseHistoryAsUserReturnsOkStatus() throws Exception {
-        // Arrange
         Block<Purchase> emptyBlock = new Block<>(Collections.emptyList(), false);
         when(shoppingService.getPurchaseHistory(anyLong(), anyInt(), anyInt())).thenReturn(emptyBlock);
 
-        // Act & Assert
         mockMvc.perform(get("/shopping/purchases")
                 .requestAttr("userId", 1L)
                 .param("page", "0"))
@@ -104,11 +98,9 @@ public class ShoppingControllerTest {
     @Test
     @WithMockUser(roles = "SELLER")
     public void testDeliverTicketsAsSellerReturnsNoContent() throws Exception {
-        // Arrange
         String requestBody = "{\"creditCard\": \"1234567890123456\"}";
         doNothing().when(shoppingService).deliverTickets(anyLong(), anyString());
 
-        // Act & Assert
         mockMvc.perform(post("/shopping/purchases/1/deliver")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
@@ -118,10 +110,8 @@ public class ShoppingControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     public void testDeliverTicketsAsUserReturnsForbidden() throws Exception {
-        // Arrange
         String requestBody = "{\"creditCard\": \"1234567890123456\"}";
 
-        // Act & Assert
         mockMvc.perform(post("/shopping/purchases/1/deliver")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))

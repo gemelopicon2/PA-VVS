@@ -37,10 +37,8 @@ public class CatalogControllerTest {
 
     @Test
     public void testFindNowPlayingMoviesReturnsOkStatus() throws Exception {
-        // Arrange
         when(catalogService.findNowPlayingMovies(any(LocalDate.class))).thenReturn(Collections.emptyList());
 
-        // Act & Assert (Un único aspecto comprobado: el estado HTTP)
         mockMvc.perform(get("/catalog/movies")
                 .param("date", LocalDate.now().toString()))
                 .andExpect(status().isOk());
@@ -48,36 +46,30 @@ public class CatalogControllerTest {
 
     @Test
     public void testFindMovieReturnsOkStatus() throws Exception {
-        // Arrange
         Movie movie = new Movie("Title", "Summary", 120);
         movie.setId(1L);
         when(catalogService.findMovie(1L)).thenReturn(movie);
 
-        // Act & Assert
         mockMvc.perform(get("/catalog/movies/1"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void testFindMovieWithNonExistentIdReturnsNotFound() throws Exception {
-        // Arrange: Partición equivalente para casos de error
         when(catalogService.findMovie(999L)).thenThrow(new InstanceNotFoundException("Movie", 999L));
 
-        // Act & Assert
         mockMvc.perform(get("/catalog/movies/999"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void testFindSessionReturnsOkStatus() throws Exception {
-        // Arrange
         Movie movie = new Movie("Title", "Summary", 120);
         Room room = new Room("Room", 50);
         Session session = new Session(movie, room, LocalDateTime.now().plusDays(1), new BigDecimal("5.00"));
         session.setId(1L);
         when(catalogService.findSession(1L)).thenReturn(session);
 
-        // Act & Assert
         mockMvc.perform(get("/catalog/sessions/1"))
                 .andExpect(status().isOk());
     }

@@ -79,7 +79,7 @@ public class UserControllerTest {
         String requestBody = "{\"firstName\": \"NewN\", \"lastName\": \"NewL\", \"email\": \"new@udc.es\"}";
         User mockUser = new User("user", "pass", "NewN", "NewL", "new@udc.es");
         mockUser.setId(1L);
-        mockUser.setRole(User.RoleType.USER); // Corrección del NullPointerException
+        mockUser.setRole(User.RoleType.USER); 
         
         when(userService.updateProfile(anyLong(), anyString(), anyString(), anyString())).thenReturn(mockUser);
 
