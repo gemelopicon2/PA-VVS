@@ -1,6 +1,7 @@
 package es.udc.paproject.backend.test.model.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -52,6 +53,19 @@ public class PermissionCheckerTest {
         assertEquals("project.entities.user", e.getName());
         assertEquals(NON_EXISTENT_ID, e.getKey());
 
+    }
+    @Test
+    public void testCheckPurchaseOwnershipReturnsUser() throws Exception {
+        // Arrange
+        User user = new User("viewer", "password", "firstName", "lastName", "viewer@udc.es");
+        user.setId(1L);
+        when(userDao.findById(1L)).thenReturn(Optional.of(user));
+
+        // Act (Fallará con un NullPointerException o aserción fallida porque devuelve null siempre)
+        User result = permissionChecker.checkPurchaseOwnership(1L, 1L);
+
+        // Assert
+        assertNotNull(result, "El método de verificación de propiedad no debería devolver null");
     }
 
 }
